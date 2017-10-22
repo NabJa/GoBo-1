@@ -1,6 +1,6 @@
 package GoBi1;
 
-public class Attributes {
+public class Attributes{
 
 	String gene_id;
 	String transcript_id;

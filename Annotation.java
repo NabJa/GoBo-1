@@ -10,10 +10,10 @@ public class Annotation {
 	public String score;
 	public String strand;
 	public String frame;
-	public static String attribute;
+	public static String[] attribute;
 
 	public Annotation(String chromosome, String feature, String type, String start, String end, String score,
-			String strand, String frame, String attribute) {
+			String strand, String frame, String[] attribute) {
 
 		this.chromosome = chromosome;
 		this.feature = feature;
@@ -29,7 +29,20 @@ public class Annotation {
 	
 	public String[] getPos(){
 		String[] pos = {start, end};
+		
+		for(int i = 0; i < pos.length; i += 2) {
+			System.out.println(pos[i] + ", " + pos[i+1]);
+		}
+		
 		return pos;
 	}
-
+	
+	public String[] printAll() {
+		String[] gene = {attribute[1], feature, type, start, end};
+		for(String e : gene) {
+			System.out.println(e);
+		}
+		return gene;
+	}
+	
 }
