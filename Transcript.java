@@ -12,32 +12,39 @@ public class Transcript {
 	Set<Integer> wt_starts = new HashSet<Integer>();
 	Set<Integer> wt_ends = new HashSet<Integer>();
 
-	public Transcript(String id, int start, int end) {
-		this.id = id;
-		this.start = start;
-		this.end = end;
-	}
 		
 	public void insertExon(RegionVector rv) {
 		exons.add(rv);
 	}
 	
+	public void setTranscript(String id, int start, int end) {
+		this.id = id;
+		this.start = start;
+		this.end = end;
+	}
 	
-	//gibt alle Anfänge von Introns
-	//brauch iterator um sinnvoll den ersten start auszulassen für spätere 
-	//intron berechnung
+	
+	/*
+	*gibt alle Anfänge von Introns
+	*brauch iterator um sinnvoll den ersten start auszulassen für spätere 
+	*intron berechnung
+	*/
 	public void calculateStarts() { 
-		for(int i = 1; i < exons.size(); i++) {
-			start = exons[i].getX2();
-			wt_starts.add(start);
+		for(RegionVector rv : exons) {
+			start = rv.getX2();
+			wt_ends.add(start);
 		}
 	}
 	
 	public void calculateEnds() {
 		for(RegionVector rv : exons) {
 			end = rv.getX1();
-			wt_starts.add(start);
+			wt_starts.add(end);
 		}
+	}
+	
+	public String getID() {
+		return id;
 	}
 	
 	
