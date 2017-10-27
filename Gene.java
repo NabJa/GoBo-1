@@ -1,6 +1,9 @@
 package gobi;
 
 import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Set;
 
 public class Gene {
 
@@ -8,32 +11,34 @@ public class Gene {
 	public int start;
 	public int end;
 	public String strand;
+	public String source;
 	public String type;
-	public String name;
-	public HashMap<String, Transcript> Components = new HashMap<String, Transcript>();
+	public Map<RegionVector, String> transcripts = new HashMap<RegionVector, String>();
 
-	// public Transcript transcript;
-	// public ArrayList<RegionVector> Components = new ArrayList<RegionVector>();
-
-	public Gene(String id, int start, int end, String strand, String type, String name) {
+	public Set<Integer> wtStarts = new HashSet<Integer>();
+	
+	public void setGene(String id, int start, int end, String strand, String source, String type) {
 		this.geneID = id;
 		this.start = start;
 		this.end = end;
 		this.strand = strand;
+		this.source = source;
 		this.type = type;
-		this.name = name;
-		//this.Components = null;
-		//this.transcript = transcript;
-}
+	//	this.transcripts = new HashMap<RegionVector, String>();
+	}
 
-	
-	//	public void takeExon(RegionVector rv) {	
-	//		transcript.insertExon(rv);
-	//	}
-	
-	
-		public void insertTranscript(Transcript trans) {
-			Components.put(trans.getID(), trans);
+	/**
+	 * inserts RegionVector in HashMap transcripts
+	 * @param rv
+	 */
+	public void insertRV(RegionVector rv) {
+			transcripts.put(rv, rv.getID());
 		}
+		
+	public String getID() {
+			return geneID;
+		}
+	
+	
 	
 }
