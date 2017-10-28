@@ -1,10 +1,14 @@
 package gobi;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
 import java.util.ListIterator;
 import java.util.Set;
+import java.util.TreeSet;
+
+import augmentedTree.IntervalTree;
 
 public class RegionVector {
 
@@ -13,10 +17,6 @@ public class RegionVector {
 	public int x2; // transcript end
 
 	public ArrayList<Region> regions = new ArrayList<Region>(); // maybe Vector instead of ArrayList???
-
-	public Set<Integer> wtstarts = new HashSet<Integer>();
-	public Set<Integer> wtends = new HashSet<Integer>();
-	public Set<Integer> wts = new HashSet<Integer>();
 
 	public RegionVector() {
 	} // empty constructor to be able to create without variables or with
@@ -42,9 +42,15 @@ public class RegionVector {
 	public int getLength() {
 		return x2 - x1;
 	}
-
+ 
 	public void addRegion(Region region) {
 		regions.add(region);
+
+			Collection<Integer> sameStarts = new TreeSet();
+			IntervalTree iTree = new IntervalTree();
+	
+			wtStarts = iTree.getIntervalsIntersecting(region.getX1(), region.getX2(),regions);
+			
 	}
 
 	public int[] getTransLoc() {
@@ -86,6 +92,8 @@ public class RegionVector {
 		return introns;
 	}
 
+	
+	
 	public int hashCode() {
 		return ((x1 * 104723) % 104729) + ((x2 * 104717) % 104711);
 	}

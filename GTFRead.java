@@ -59,7 +59,13 @@ public class GTFRead {
 					gene.insertRV(newRV);
 					currentRV = newRV;
 				} else if (type.toLowerCase().equals("gene")) {
+					if(gene.wtStarts.size() == 0) {
+						System.out.println("LEER");
+					} else {
+						System.out.println("INHALT");
+					}
 					gene.setGene(geneID, start, end, strand, source, type); // creates new gene with new hashMap for transcripts
+					
 				}
 			}
 		} catch (Exception e) {

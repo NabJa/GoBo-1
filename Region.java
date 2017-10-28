@@ -1,6 +1,6 @@
 package gobi;
 
-public class Region {
+public class Region{
 
 	public int x1;
 	public int x2;
