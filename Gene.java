@@ -20,7 +20,7 @@ public class Gene {
 	public String strand;
 	public String source;
 	public String type;
-	public Map<RegionVector, String> transcripts = new HashMap<RegionVector, String>();
+	public Map<String, RegionVector> transcripts = new HashMap<String, RegionVector>();
 
 	public Collection<String> wtStarts = new ArrayList<String>();
 	public Set<Integer> wtEnds = new HashSet<Integer>();
@@ -42,7 +42,7 @@ public class Gene {
 	 * @param rv
 	 */
 	public void insertRV(RegionVector rv) {
-		transcripts.put(rv, rv.getID());
+		transcripts.put(rv.getID(), rv);
 	}
 
 	public String getID() {
@@ -52,7 +52,7 @@ public class Gene {
 	public void getStarts2() { // Collection<Integer>
 
 		transcripts.forEach((k, v) -> {
-			System.out.println(k.getX1() + " " + k.getX2() + "\t" + "\t" + v);
+			System.out.println(v.getX1() + " " + v.getX2() + "\t" + "\t" + k);
 		});
 		// transcripts.forEach((k,v) -> {
 		// transcripts.forEach((k1,v1) -> {
@@ -99,7 +99,7 @@ public class Gene {
 	}
 
 	public void printTranscriptsInverse() {
-		transcripts.forEach((k, v) -> { k.inverse().printRegions(); });
+		transcripts.forEach((k, v) -> { v.inverse().printRegions(); });
 
 	}
 	

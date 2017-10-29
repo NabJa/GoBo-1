@@ -1,19 +1,21 @@
 package gobi;
 
 import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.HashSet;
 
 
 public class ExonSkippingEvents {
  		
-	public static void main(String[] args) throws FileNotFoundException {
+	public static void main(String[] args) throws Exception {
 		
 //		GTFRead maus = new GTFRead("C:/Users/Anja/Desktop/GoBi/inverseTester.txt");
 //		maus.getGenes();
-	
-		
-		HashMap<RegionVector, String> transcripts = new HashMap<RegionVector, String>();
+
+		/* Test calculation of exons
+		 * 
+		HashMap<String, RegionVector> transcripts = new HashMap<String, RegionVector>();
 		
 		RegionVector rv1 = new RegionVector("rv1", 1, 3);
 		RegionVector rv2 = new RegionVector("rv2", 6, 12);
@@ -54,14 +56,51 @@ public class ExonSkippingEvents {
 		rv5.addRegion(r12);
 		rv5.addRegion(r13);
 
-		transcripts.put(rv1, rv1.id);
-		transcripts.put(rv2, rv2.id);
-		transcripts.put(rv3, rv3.id);
-		transcripts.put(rv4, rv4.id);
-		transcripts.put(rv5, rv5.id);
+		transcripts.put(rv1.id, rv1);
+		transcripts.put(rv2.id, rv2);
+		transcripts.put(rv3.id, rv3);
+		transcripts.put(rv4.id, rv4);
+		transcripts.put(rv5.id, rv5);
+		
+		RVcomperator compr = new RVcomperator();
+		
+		Region intron = new Region(45, 90);
+		
+		compr.getSkippedExons(intron, "rv2", "ID: whatever", transcripts);
+	*/
 		
 		
-	
+		
+		
+		/*  Test the output writer
+		String[] svprots = {"ENSP00000349276","ENSP00000441052","ENSP00000265368","ENSP00000356224"};
+		String[] wtprots = {"ENSP00000349276","ENSP00000265368","ENSP00000356224"};
+
+		
+		Output out = new Output("ENSG00000131018", "SYNE1");
+		out.chr="6";
+		out.strand = "-";
+		out.sv = new Region(123, 345);
+		out.wt = new RegionVector();
+		out.sv_prots = svprots;
+		out.wt_prots = wtprots;
+		out.minSkippedBases = 1;
+		out.maxSkippedBases = 123;
+		out.minSkippedExons = 3;
+		out.maxSkippedExons = 15;
+		out.nprots = 1233;
+		out.ntrans = 3434;
+		
+		out.printHeader();
+		int i = 1000;
+		while(i > 0) {
+			out.printOutTxt();
+			i--;
+		}
+		out.closeW();
+	*/
+		
+		
 		
 		
 /*		
