@@ -1,7 +1,108 @@
-package GoBi1;
+package gobi;
 
-public class RegionVector{
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashSet;
+import java.util.List;
+import java.util.ListIterator;
+import java.util.Set;
+import java.util.TreeSet;
+
+import augmentedTree.IntervalTree;
+
+public class RegionVector {
+
+	public String id; // transcript ID
+	public int x1; // transcript start
+	public int x2; // transcript end
+
+	public ArrayList<Region> regions = new ArrayList<Region>(); // maybe Vector instead of ArrayList???
+
+	public RegionVector() {
+	} // empty constructor to be able to create without variables or with
+
+	public RegionVector(String id, int x1, int x2) {
+		this.id = id;
+		this.x1 = x1;
+		this.x2 = x2;
+	}
+
+	public String getID() {
+		return id;
+	}
+
+	public int getX1() {
+		return x1;
+	}
+
+	public int getX2() {
+		return x2;
+	}
+
+	public int getLength() {
+		return x2 - x1;
+	}
+ 
+	public void addRegion(Region region) {
+		regions.add(region);
+//			Collection<Integer> sameStarts = new TreeSet();
+//			IntervalTree iTree = new IntervalTree();
+//	
+//			wtStarts = iTree.getIntervalsIntersecting(region.getX1(), region.getX2(),regions);			
+	}
+
+	public int[] getTransLoc() {
+		int[] region = { x1, x2 };
+		return region;
+	}
+
+	/**
+	 * Returns an ArrayList<Region> that are the inverse of given RegionVector.
+	 * Example: Input{1,2; 3,4; 5,6} -> Output{2,3; 4,5}
+	 * @return
+	 */
+	public ArrayList<Region> arrayInverse() {
+
+		ArrayList<Region> introns = new ArrayList<Region>();
+
+		for (int i = 0; i < regions.size() - 1; i++) {
+			Region intron = new Region(regions.get(i).getX2(), regions.get(i + 1).getX1());
+			introns.add(intron);
+		}
+
+		return introns;
+	}
+
+	/**
+	 * Returns an RegionVector that are the inverse of given RegionVector. Has to be save in new Variable!!!
+	 * Example: Input{1,2; 3,4; 5,6} -> Output{2,3; 4,5}
+	 * @return
+	 */
+	public RegionVector inverse() {
+
+		RegionVector introns = new RegionVector();
+
+		for (int i = 0; i < regions.size() - 1; i++) {
+			Region intron = new Region(regions.get(i).getX2(), regions.get(i + 1).getX1());
+			introns.addRegion(intron);
+		}
+		
+		introns.id = id;
+		
+		return introns;
+	}
+
+	public void printRegions() {
+		System.out.println("ID: " + id);
+		for(Region r : regions) {
+			System.out.println(r.getX1() + " " + r.getX2() + " ");
+		}
+		System.out.println();
+	}
 
 	
+	public int hashCode() {
+		return ((x1 * 104723) % 104729) + ((x2 * 104717) % 104711);
+	}
 
 }
