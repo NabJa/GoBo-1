@@ -1,32 +1,28 @@
 package gobi;
 
-import augmentedTree.IntervalTree;
-
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Map;
-import java.util.Map.Entry;
 import java.util.Set;
-import java.util.TreeSet;
 
 public class Gene {
 
 	public String geneID;
 	public int start;
 	public int end;
-	public String strand;
+	public char strand;
 	public String source;
 	public String type;
-	public Map<String, RegionVector> transcripts = new HashMap<String, RegionVector>();
+	public HashMap<String, RegionVector> transcripts = new HashMap<String, RegionVector>();
 
 	public Collection<String> wtStarts = new ArrayList<String>();
 	public Set<Integer> wtEnds = new HashSet<Integer>();
 	public Set<Integer> wts = new HashSet<Integer>();
 
-	public void setGene(String id, int start, int end, String strand, String source, String type) {
+	public void setGene(String id, int start, int end, char strand, String source, String type) {
 		this.geneID = id;
 		this.start = start;
 		this.end = end;
@@ -49,6 +45,14 @@ public class Gene {
 		return geneID;
 	}
 
+	public int nTrans() {
+		int i = 0;
+	    for(RegionVector r : transcripts.values()) {
+	    	i += r.getSize();
+	    }
+	    return i;
+	}
+	
 	public void getStarts2() { // Collection<Integer>
 
 		transcripts.forEach((k, v) -> {

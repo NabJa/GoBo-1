@@ -9,8 +9,8 @@ public class Output {
 
 	String geneID; //
 	String geneSymbol; //
-	String chr; // chromosome
-	String strand; //
+	char chr; // chromosome
+	char strand; //
 	int nprots; // number of annotated CDS in the gene
 	int ntrans; // number of annotated transcripts in the gene
 	Region sv; // the SV intron as start:end
@@ -25,9 +25,10 @@ public class Output {
 	FileWriter file;
 	BufferedWriter writer;
 
-	public Output(String geneID, String geneSymbol) {
+	public Output(String geneID, String geneSymbol, char chr) {
 		this.geneID = geneID;
 		this.geneSymbol = geneSymbol;
+		this.chr = chr;
 
 		try {
 			file = new FileWriter("C:\\Users\\Anja\\Desktop\\testOutput.txt");
@@ -58,7 +59,7 @@ public class Output {
 	 * prints a tsv-file of everything in object Output
 	 * @throws Exception
 	 */
-	public void printOutTxt() throws Exception {
+	public void printOutTxt(){
 
 		try {
 			writer.write(

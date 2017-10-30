@@ -10,10 +10,14 @@ public class ExonSkippingEvents {
  		
 	public static void main(String[] args) throws Exception {
 		
-//		GTFRead maus = new GTFRead("C:/Users/Anja/Desktop/GoBi/inverseTester.txt");
+//		GTFRead maus = new GTFRead("C:/Users/Anja/Desktop/GoBi/Mus_musculus.GRCm38.75.txt");
 //		maus.getGenes();
-
-		// Test calculation of exons
+		
+//		GtfReadFast reader = new GtfReadFast();
+//		reader.readFast("C:/Users/Anja/Desktop/GoBi/Mus_musculus.GRCm38.75.txt");
+ 
+		
+		//Test calculation of exons
 		HashMap<String, RegionVector> transcripts = new HashMap<String, RegionVector>();
 		
 		RegionVector rv1 = new RegionVector("rv1", 1, 3);
@@ -39,12 +43,12 @@ public class ExonSkippingEvents {
 		rv2.addRegion(r7);
 		
 		Region r8 = new Region(36, 45);
-		rv3.addRegion(r8);
 		Region r9 = new Region(67, 82);
-		rv3.addRegion(r9);
 		Region r92 = new Region(91, 95);
-		rv3.addRegion(r92);
 		Region r91 = new Region(100, 121);
+		rv3.addRegion(r8);
+		rv3.addRegion(r9);
+		rv3.addRegion(r92);
 		rv3.addRegion(r91);
 			
 		
@@ -63,10 +67,10 @@ public class ExonSkippingEvents {
 		transcripts.put(rv3.id, rv3);
 		transcripts.put(rv4.id, rv4);
 		transcripts.put(rv5.id, rv5);
-		
+				
 		RVcomperator compr = new RVcomperator();
 		
-		Region intron = new Region(67, 95);
+		Region intron = new Region(36, 95);
 
 		compr.getSkippedExons(intron, "rv9", "ID: whatever", transcripts);
 		

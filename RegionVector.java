@@ -100,6 +100,13 @@ public class RegionVector {
 		System.out.println();
 	}
 
+	public int getSize() {
+		int i = 0;
+		for(Region r : regions) {
+			i++;
+		}
+		return i;
+	}
 	
 	public int hashCode() {
 		return ((x1 * 104723) % 104729) + ((x2 * 104717) % 104711);

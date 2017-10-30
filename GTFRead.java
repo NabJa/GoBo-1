@@ -1,7 +1,9 @@
 package gobi;
 //import.package augmentedTree
 
+import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileReader;
 import java.util.Scanner;
 
 public class GTFRead {
@@ -27,7 +29,8 @@ public class GTFRead {
 		Gene gene = new Gene();
 		RegionVector currentRV = new RegionVector();
 
-		try {
+		try {	
+			 
 			sc = new Scanner(file);
 
 			//jumps over first annotation starting with "#"
@@ -50,10 +53,9 @@ public class GTFRead {
 				int end = Integer.parseInt(line[4]); // line[3] is always end and should be read as integer
 				String geneID = line[8];
 				String strand = line[6];
-				String proteinID = line[18];
 
 				if (type.toLowerCase().equals("cds")) {
-					Region cds = new Region(start, end, proteinID);
+					Region cds = new Region(start, end);
 					currentRV.addRegion(cds);
 				} else if (type.toLowerCase().equals("transcript")) {
 					RegionVector newRV = new RegionVector(line[9], start, end);
@@ -67,7 +69,7 @@ public class GTFRead {
 		} catch (Exception e) {
 			throw new RuntimeException("got error xxx while doing yyy", e);
 		}
-		gene.printTranscriptsInverse(); //DOESNT PRINT FIRST GENE					
+		//gene.printTranscriptsInverse(); //DOESNT PRINT FIRST GENE					
 
 		sc.close();
 	}
