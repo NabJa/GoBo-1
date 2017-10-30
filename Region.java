@@ -4,11 +4,18 @@ public class Region{
 
 	public int x1;
 	public int x2;
+	public String regionID;
 
 	Region(int x1, int x2) {
 		this.x1 = x1;
 		this.x2 = x2;
 	}
+	
+//	Region(int x1, int x2, String id) {
+//		this.x1 = x1;
+//		this.x2 = x2;
+//		this.regionID = id;
+//	}
 
 	public int getX1() {
 		return x1;

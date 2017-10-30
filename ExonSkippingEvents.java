@@ -13,8 +13,7 @@ public class ExonSkippingEvents {
 //		GTFRead maus = new GTFRead("C:/Users/Anja/Desktop/GoBi/inverseTester.txt");
 //		maus.getGenes();
 
-		/* Test calculation of exons
-		 * 
+		// Test calculation of exons
 		HashMap<String, RegionVector> transcripts = new HashMap<String, RegionVector>();
 		
 		RegionVector rv1 = new RegionVector("rv1", 1, 3);
@@ -33,18 +32,21 @@ public class ExonSkippingEvents {
 		rv1.addRegion(r4);
 		
 		Region r5 = new Region(35, 45);
-		Region r6 = new Region(90, 95);
-		Region r7 = new Region(101, 121);
+		Region r6 = new Region(67, 95);
+		Region r7 = new Region(90, 121);
 		rv2.addRegion(r5);
 		rv2.addRegion(r6);
 		rv2.addRegion(r7);
 		
-		Region r8 = new Region(35, 45);
+		Region r8 = new Region(36, 45);
 		rv3.addRegion(r8);
 		Region r9 = new Region(67, 82);
 		rv3.addRegion(r9);
-		Region r91 = new Region(101, 121);
+		Region r92 = new Region(91, 95);
+		rv3.addRegion(r92);
+		Region r91 = new Region(100, 121);
 		rv3.addRegion(r91);
+			
 		
 		Region r10 = new Region(67, 82);
 		Region r11 = new Region(101, 121);
@@ -64,11 +66,23 @@ public class ExonSkippingEvents {
 		
 		RVcomperator compr = new RVcomperator();
 		
-		Region intron = new Region(45, 90);
+		Region intron = new Region(67, 95);
+
+		compr.getSkippedExons(intron, "rv9", "ID: whatever", transcripts);
 		
-		compr.getSkippedExons(intron, "rv2", "ID: whatever", transcripts);
-	*/
 		
+		
+//		TEST SUBTRACT METHOD FROM RVcomperator
+//		System.out.println(intron.getX1() + " " + intron.getX2());
+//		
+//		System.out.println(".........");
+//		
+//		compr.printRV(rv1);
+//		
+//		System.out.println(".........");
+//
+//		RegionVector testRV = compr.subtract(intron, rv1);
+//		compr.printRV(testRV);
 		
 		
 		

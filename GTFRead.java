@@ -50,9 +50,10 @@ public class GTFRead {
 				int end = Integer.parseInt(line[4]); // line[3] is always end and should be read as integer
 				String geneID = line[8];
 				String strand = line[6];
+				String proteinID = line[18];
 
 				if (type.toLowerCase().equals("cds")) {
-					Region cds = new Region(start, end);
+					Region cds = new Region(start, end, proteinID);
 					currentRV.addRegion(cds);
 				} else if (type.toLowerCase().equals("transcript")) {
 					RegionVector newRV = new RegionVector(line[9], start, end);

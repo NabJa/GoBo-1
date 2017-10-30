@@ -11,11 +11,11 @@ import java.util.stream.Collectors;
 public class RVcomperator {
 
 	public void printRV(RegionVector rv) {
-		for(Region r : rv.regions) {
+		for (Region r : rv.regions) {
 			System.out.println(r.getX1() + " " + r.getX2() + " ");
 		}
 	}
-	
+
 	/**
 	 * Takes 2 RegionVectors and returns a set with all overlapping starts
 	 * 
@@ -95,7 +95,7 @@ public class RVcomperator {
 		HashSet<String> sameStarts = new HashSet<String>();
 
 		transcripts.forEach((id, rv) -> {
-			for (Region intron : rv.inverse().regions) {
+			for (Region intron : rv.regions) { //rv.inverse().regions removed inverse to check if it works without
 				if (intron.getX1() == start) {
 					sameStarts.add(rv.id);
 				}
@@ -117,7 +117,7 @@ public class RVcomperator {
 		HashSet<String> sameEnds = new HashSet<String>();
 
 		transcripts.forEach((id, rv) -> {
-			for (Region intron : rv.inverse().regions) {
+			for (Region intron : rv.regions) { //rv.inverse().regions removed inverse to check if it works without
 				if (intron.getX2() == end) {
 					sameEnds.add(rv.id);
 				}
@@ -166,21 +166,25 @@ public class RVcomperator {
 	public RegionVector subtract(Region a, RegionVector b) {
 		RegionVector skippedExons = new RegionVector();
 		int i = 0;
+
 		if (b.regions.size() < 2) {
 			skippedExons.addRegion(new Region(0, 0));
 		} else {
-			while(b.regions.get(i).getX2() != a.getX1()) {
+			while (b.regions.get(i).getX1() != a.getX1() && i < b.regions.size() - 1) {
 				i++;
 			}
-			while(b.regions.get(i).getX1() != a.getX2()) {
-				skippedExons.addRegion(b.regions.get(i));
+			while (b.regions.get(i).getX2() != a.getX2() && i < b.regions.size() - 1) {
+				int start = b.regions.get(i).getX2();
+				int end = b.regions.get(i + 1).getX1();
+				Region skippedExon = new Region(start, end);
+				skippedExons.addRegion(skippedExon);
+				i++;
 			}
 		}
-		
+
 		return skippedExons;
 	}
-	
-	
+
 	public HashSet<String> getOverlappingIntrons(int start, int end, HashMap<String, RegionVector> transcripts) {
 
 		HashSet<String> sameStarts = new HashSet<String>();
@@ -195,29 +199,30 @@ public class RVcomperator {
 		return sameIntrons;
 	}
 
-	public Output getSkippedExons(Region intron, String transID, String geneID,  HashMap<String, RegionVector> transcripts) {
-		
+	public Output getSkippedExons(Region intron, String transID, String geneID,
+			HashMap<String, RegionVector> transcripts) {
+
 		Output out = new Output(geneID, "syn1");
 		HashSet<String> sameIntrons = new HashSet<String>();
 		sameIntrons = getOverlappingIntrons(intron.getX1(), intron.getX2(), transcripts);
 		sameIntrons.remove(transID);
 		
-		for(String id : sameIntrons) {
-			//if(transcripts.containsKey(id)) {}
-				RegionVector skippedExons = new RegionVector();
-				RegionVector queryRV = transcripts.get(id);
 
-				System.out.println("1");
-				printRV(transcripts.get(id));
-				
-				skippedExons = subtract(intron, queryRV);
-				
-				System.out.println("2");
-				printRV(skippedExons);
-			
+		for (String id : sameIntrons) {
+			// if(transcripts.containsKey(id)) {}
+			RegionVector skippedExons = new RegionVector();
+			RegionVector queryRV = transcripts.get(id);
+
+			System.out.println("ID: " + transcripts.get(id).id);
+			//printRV(queryRV);
+						
+			skippedExons = subtract(intron, queryRV);
+			System.out.println("Skipped Exons: ");
+			printRV(skippedExons);
+
 		}
-		
+
 		return out;
-		
+
 	}
 }
