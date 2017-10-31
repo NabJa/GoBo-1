@@ -8,8 +8,8 @@ import java.io.IOException;
 public class Output {
 
 	String geneID; //
-	String geneSymbol; //
-	char chr; // chromosome
+	String geneName; //
+	String chr; // chromosome
 	char strand; //
 	int nprots; // number of annotated CDS in the gene
 	int ntrans; // number of annotated transcripts in the gene
@@ -25,9 +25,9 @@ public class Output {
 	FileWriter file;
 	BufferedWriter writer;
 
-	public Output(String geneID, String geneSymbol, char chr) {
+	public Output(String geneID, String geneName, String chr) {
 		this.geneID = geneID;
-		this.geneSymbol = geneSymbol;
+		this.geneName = geneName;
 		this.chr = chr;
 
 		try {
@@ -62,8 +62,8 @@ public class Output {
 	public void printOutTxt(){
 
 		try {
-			writer.write(
-					geneID + "\t" + geneSymbol + "\t" + chr + "\t" + strand + "\t" + nprots + "\t" + ntrans + "\t");
+			writer.write(geneID + "\t" + geneName + "\t" + chr + "\t" + strand + "\t" + nprots + "\t" + ntrans + "\t");
+			
 			writer.write(sv.getX1() + ":" + sv.getX2() + "\t");
 
 			String str = "";

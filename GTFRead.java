@@ -47,12 +47,14 @@ public class GTFRead {
 				//Splits after tab and ";"
 				String[] line = sc.nextLine().split("(\t)|(;)");
 				
+				String chr = line[0];
 				String source = line[1];
 				String type = line[2];
 				int start = Integer.parseInt(line[3]); // line[3] is always start and should be read as integer
 				int end = Integer.parseInt(line[4]); // line[3] is always end and should be read as integer
 				String geneID = line[8];
-				String strand = line[6];
+				char strand = line[6].charAt(0);
+				String geneName = line[10];
 
 				if (type.toLowerCase().equals("cds")) {
 					Region cds = new Region(start, end);
@@ -63,7 +65,7 @@ public class GTFRead {
 					currentRV = newRV;
 				} else if (type.toLowerCase().equals("gene")) {
 					//gene.printTranscriptsInverse(); //DOESNT PRINT FIRST GENE					
-					gene.setGene(geneID, start, end, strand, source, type); // creates new gene with new hashMap for transcripts
+					gene.setGene(geneID, start, end, strand, chr, source, type, geneName); // creates new gene with new hashMap for transcripts
 				}
 			}
 		} catch (Exception e) {

@@ -16,19 +16,25 @@ public class Gene {
 	public char strand;
 	public String source;
 	public String type;
+	public String geneChr;
+	public String geneName;
+	
 	public HashMap<String, RegionVector> transcripts = new HashMap<String, RegionVector>();
 
 	public Collection<String> wtStarts = new ArrayList<String>();
 	public Set<Integer> wtEnds = new HashSet<Integer>();
 	public Set<Integer> wts = new HashSet<Integer>();
 
-	public void setGene(String id, int start, int end, char strand, String source, String type) {
+	public void setGene(String id, int start, int end, char strand, String geneChr, 
+			String source, String type, String geneName) {
 		this.geneID = id;
 		this.start = start;
 		this.end = end;
 		this.strand = strand;
 		this.source = source;
 		this.type = type;
+		this.geneChr = geneChr;
+		this.geneName = geneName;
 		// this.transcripts = new HashMap<RegionVector, String>();
 	}
 
