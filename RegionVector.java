@@ -111,5 +111,14 @@ public class RegionVector {
 	public int hashCode() {
 		return ((x1 * 104723) % 104729) + ((x2 * 104717) % 104711);
 	}
+	
+	
+	public String toString() {
+		 String result = id;
+		    for (int i = 0; i < regions.size(); i++) {
+		        result += " " + regions.get(i);
+		    }
+		    return result;
+	}
 
 }

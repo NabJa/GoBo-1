@@ -32,4 +32,8 @@ public class Region{
 	public int hashCode() {
 		return ((x1 * 104723) % 104729) + ((x2 * 104717) % 104711);
 	}
+	
+	public String toString() {
+		return ""+x1+":"+x2;
+	}
 }

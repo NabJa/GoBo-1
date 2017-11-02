@@ -25,13 +25,10 @@ public class Output {
 	FileWriter file;
 	BufferedWriter writer;
 
-	public Output(String geneID, String geneName, String chr) {
-		this.geneID = geneID;
-		this.geneName = geneName;
-		this.chr = chr;
+	public Output(String outputDestination) {
 
 		try {
-			file = new FileWriter("C:\\Users\\Anja\\Desktop\\testOutput.txt");
+			file = new FileWriter(outputDestination);
 			writer = new BufferedWriter(file);
 		} catch (Exception e) {
 			throw new RuntimeException("got error while writing output.", e);
