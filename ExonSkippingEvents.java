@@ -6,7 +6,7 @@ public class ExonSkippingEvents {
 
 	public static void main(String[] args) throws Exception {
 
-		 String input = "C:/Users/Anja/Desktop/GoBi/endTest.input";
+		 String input = "C:/Users/Anja/Desktop/GoBi/ENSG00000131018.input";
 		 String out = "C:/Users/Anja/Desktop/testOutput.txt";
 		
 		 GtfReadFast maus = new GtfReadFast();
@@ -18,8 +18,8 @@ public class ExonSkippingEvents {
 		// Test calculation of exons
 //		Gene gene = new Gene();
 //		gene.setGene("ENSG83493", 30, 300, '-', "6", "JabLab", "gene", "HawkinGEne");
-//		// HashMap<String, RegionVector> transcripts = new HashMap<String,
-//		// RegionVector>();
+		// HashMap<String, RegionVector> transcripts = new HashMap<String,
+		// RegionVector>();
 //
 //		RegionVector rv1 = new RegionVector("rv1", 1, 3);
 //		RegionVector rv2 = new RegionVector("rv2", 6, 12);
@@ -33,9 +33,12 @@ public class ExonSkippingEvents {
 //		Region r4 = new Region(70, 80);
 //		rv1.addRegion(r1);
 //		rv1.addRegion(r2);
-//		rv1.addRegion(r3);
 //		rv1.addRegion(r4);
+//		rv1.addRegion(r3);
 //		gene.insertRV(rv1);
+//		
+//		RVcomperator compr = new RVcomperator();
+//		compr.printRV(rv1);
 //
 //		Region r5 = new Region(10, 20);
 //		Region r6 = new Region(50, 60);

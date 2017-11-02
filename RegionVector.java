@@ -1,14 +1,8 @@
 package gobi;
 
 import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashSet;
-import java.util.List;
-import java.util.ListIterator;
-import java.util.Set;
-import java.util.TreeSet;
-
-import augmentedTree.IntervalTree;
+import java.util.Collections;
+import java.util.Comparator;
 
 public class RegionVector {
 
@@ -42,13 +36,32 @@ public class RegionVector {
 	public int getLength() {
 		return x2 - x1;
 	}
- 
-	public void addRegion(Region region) {
+
+	public void addRegionUnsorted(Region region) {
 		regions.add(region);
-//			Collection<Integer> sameStarts = new TreeSet();
-//			IntervalTree iTree = new IntervalTree();
-//	
-//			wtStarts = iTree.getIntervalsIntersecting(region.getX1(), region.getX2(),regions);			
+		// Collection<Integer> sameStarts = new TreeSet();
+		// IntervalTree iTree = new IntervalTree();
+		//
+		// wtStarts = iTree.getIntervalsIntersecting(region.getX1(),
+		// region.getX2(),regions);
+	}
+
+	/**
+	 * adds the Region in a sorted way. Smallest start first.
+	 * 
+	 * @param region
+	 */
+	public void addRegion(Region region) {
+		if (regions.size() == 0) {
+			regions.add(region);
+		} else {
+			for (int i = 0; i < regions.size(); i++) {
+				if(regions.get(i).getX1() < region.getX1()) continue;
+				regions.add(i, region);
+				return;
+			}
+			regions.add(region);
+		}
 	}
 
 	public int[] getTransLoc() {
@@ -59,6 +72,7 @@ public class RegionVector {
 	/**
 	 * Returns an ArrayList<Region> that are the inverse of given RegionVector.
 	 * Example: Input{1,2; 3,4; 5,6} -> Output{2,3; 4,5}
+	 * 
 	 * @return
 	 */
 	public ArrayList<Region> arrayInverse() {
@@ -74,8 +88,9 @@ public class RegionVector {
 	}
 
 	/**
-	 * Returns an RegionVector that are the inverse of given RegionVector. Has to be save in new Variable!!!
-	 * Example: Input{1,2; 3,4; 5,6} -> Output{2,3; 4,5}
+	 * Returns an RegionVector that are the inverse of given RegionVector. Has to be
+	 * save in new Variable!!! Example: Input{1,2; 3,4; 5,6} -> Output{2,3; 4,5}
+	 * 
 	 * @return
 	 */
 	public RegionVector inverse() {
@@ -86,15 +101,15 @@ public class RegionVector {
 			Region intron = new Region(regions.get(i).getX2(), regions.get(i + 1).getX1());
 			introns.addRegion(intron);
 		}
-		
+
 		introns.id = id;
-		
+
 		return introns;
 	}
 
 	public void printRegions() {
 		System.out.println("ID: " + id);
-		for(Region r : regions) {
+		for (Region r : regions) {
 			System.out.println(r.getX1() + " " + r.getX2() + " ");
 		}
 		System.out.println();
@@ -102,23 +117,23 @@ public class RegionVector {
 
 	public int getSize() {
 		int i = 0;
-		for(Region r : regions) {
+		for (Region r : regions) {
 			i++;
 		}
 		return i;
 	}
-	
+
+	@Override
 	public int hashCode() {
 		return ((x1 * 104723) % 104729) + ((x2 * 104717) % 104711);
 	}
-	
-	
-	public String toString() {
-		 String result = id;
-		    for (int i = 0; i < regions.size(); i++) {
-		        result += " " + regions.get(i);
-		    }
-		    return result;
-	}
 
+	@Override
+	public String toString() {
+		String result = id;
+		for (int i = 0; i < regions.size(); i++) {
+			result += " " + regions.get(i);
+		}
+		return result;
+	}
 }
