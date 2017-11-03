@@ -1,12 +1,10 @@
 package gobi;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Map;
-import java.util.Objects;
 import java.util.Set;
 import java.util.TreeSet;
-import java.util.stream.Collectors;
 
 public class RVcomperator {
 
@@ -145,32 +143,7 @@ public class RVcomperator {
 		return setA;
 	}
 
-	/**
-	 * Returns Region(0,0) if input RegionVector contains only 1 or 0 regions. Else
-	 * it returns the inverse of b...
-	 * 
-	 * @param a
-	 * @param b
-	 * @return skippedExons as RegionVector
-	 */
-	public RegionVector subtractFALSE(Region a, RegionVector b) {
-
-		RegionVector skippedExons = new RegionVector();
-
-		if (b.regions.size() < 2) {
-			Region zero = new Region(0, 0);
-			skippedExons.addRegion(zero);
-		} else {
-			for (int i = 0; i < b.regions.size() - 1; i++) {
-				Region exon = new Region(b.regions.get(i).getX2(), b.regions.get(i + 1).getX1());
-				skippedExons.addRegion(exon);
-			}
-		}
-
-		return skippedExons;
-	}
-
-	public RegionVector subtract(Region a, RegionVector b) {
+	public RegionVector subtract(Region a, RegionVector b, OutputMap outMap) {
 		RegionVector introns = new RegionVector();
 		int i = 0;
 
@@ -178,6 +151,9 @@ public class RVcomperator {
 			i++;
 		}
 
+		if(!outMap.isInResults(a)) {
+			
+		}
 		if (regionInRV(a, b) == false) {
 			while (b.regions.get(i).getX2() != a.getX2()) {
 				int start = b.regions.get(i).getX1();
@@ -193,28 +169,6 @@ public class RVcomperator {
 		}
 
 		return introns;
-	}
-
-	public RegionVector subtract1(Region a, RegionVector b) {
-		RegionVector introns = new RegionVector();
-		int i = 0;
-
-		while (b.regions.get(i).getX1() != a.getX1() && i < b.regions.size() - 1) {
-			i++;
-		}
-
-		if (regionInRV(a, b) == false) {
-			do {
-				int start = b.regions.get(i).getX1();
-				int end = b.regions.get(i).getX2();
-				Region skippedIntron = new Region(start, end);
-				introns.addRegion(skippedIntron);
-				i++;
-			} while (b.regions.get(i).getX2() != a.getX2());
-		}
-
-		return introns;
-
 	}
 
 	public boolean regionInRV(Region r, RegionVector rv) {
@@ -257,10 +211,11 @@ public class RVcomperator {
 	 * @param transID
 	 * @return
 	 */
-	public void getSkippedExon(Region intron, Gene gene, String transID, Output out) {
+	public void getSkippedExon(Region intron, Gene gene, String transID, OutputMap outMap) {
 
 		HashSet<String> sameIntrons = new HashSet<String>();
 
+		
 		sameIntrons = getOverlappingIntrons(intron.getX1(), intron.getX2(), gene.transcripts);
 		sameIntrons.remove(transID);
 
@@ -271,34 +226,23 @@ public class RVcomperator {
 
 			queryRV = queryRV.inverse();
 
-			skippedExons = subtract(intron, queryRV);
+			
+			skippedExons = subtract(intron, queryRV, outMap);
 
 			if (skippedExons.regions.size() > 0) {
-				out.geneID = gene.geneID;
-				out.geneName = gene.geneName;
-				out.chr = gene.geneChr;
-				out.strand = gene.strand;
-				out.nprots = gene.transcripts.size();
-				out.ntrans = gene.nTrans();
-				out.sv = intron;
-				out.wt = skippedExons;
-				String[] sv_prot = { "id1", "id2" };
-				String[] wt_prot = { "id31", "id12" };
-				out.sv_prots = sv_prot;
-				out.wt_prots = wt_prot;
-				out.minSkippedExons = 1;
-				out.maxSkippedExons = 1;
-				out.minSkippedBases = 1;
-				out.maxSkippedBases = 1;
-				out.printOutTxt();
+				Output output = new Output();
+				output.addSV_prots("id sv");
+				output.addWT_prots("id_wt");
+				output.setOutput(gene, intron, skippedExons);
+				outMap.resultList.add(output);
 			}
 		}
 	}
 
-	public void getSkippedExonFromGen(Gene gene, Output out) {
+	public void getSkippedExonFromGen(Gene gene, OutputMap outMap) {
 		for (RegionVector rv : gene.transcripts.values()) {
 			for (Region r : rv.inverse().regions) {
-				getSkippedExon(r, gene, rv.id, out);
+				getSkippedExon(r, gene, rv.id, outMap);
 			}
 		}
 	}

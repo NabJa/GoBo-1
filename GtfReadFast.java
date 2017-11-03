@@ -7,7 +7,7 @@ import java.io.IOException;
 
 public class GtfReadFast {
 
-	public void readFast(String path, Output out) {
+	public void readFast(String path, String out) {
 
 		BufferedReader reader = null;
 		RegionVector currentRV = new RegionVector();
@@ -19,7 +19,7 @@ public class GtfReadFast {
 
 			String rline = "";
 			// jumps over first annotation starting with "#"
-			while (rline.startsWith("#")) {
+			while ((rline = reader.readLine()) != null && rline.startsWith("#")) { //.indexOf('#') == 0
 				continue;
 			}
 
@@ -36,7 +36,9 @@ public class GtfReadFast {
 				String geneName = line[9].substring(line[9].indexOf('\"') + 1, line[9].length() - 1);
 
 				if (type.toLowerCase().equals("cds")) {
+					String proteinID = line[15].substring(line[15].indexOf('\"') + 1, line[15].length() - 1);
 					Region cds = new Region(start, end);
+					cds.regionID = proteinID;
 					currentRV.addRegion(cds);
 				} else if (type.toLowerCase().equals("transcript")) {
 					RegionVector newRV = new RegionVector(line[9], start, end);
@@ -44,12 +46,20 @@ public class GtfReadFast {
 					currentRV = newRV;
 				} else if (type.toLowerCase().equals("gene")) {
 					gene.setGene(geneID, start, end, strand, chr, source, type, geneName);
+
+					OutputMap outMap = new OutputMap(out);
+
 					RVcomperator compr = new RVcomperator();
-					compr.getSkippedExonFromGen(gene, out);
+					compr.getSkippedExonFromGen(gene, outMap);
+					outMap.printOutput();
 				}
 			}
+			OutputMap outMap = new OutputMap(out);
+
 			RVcomperator compr = new RVcomperator();
-			compr.getSkippedExonFromGen(gene, out);
+			compr.getSkippedExonFromGen(gene, outMap);
+			outMap.printOutput();
+			outMap.closeAllout();
 
 		} catch (IOException e) {
 			e.printStackTrace();
