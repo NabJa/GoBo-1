@@ -18,15 +18,15 @@ public class Gene {
 	public String type;
 	public String geneChr;
 	public String geneName;
-	
+
 	public HashMap<String, RegionVector> transcripts = new HashMap<String, RegionVector>();
 
 	public Collection<String> wtStarts = new ArrayList<String>();
 	public Set<Integer> wtEnds = new HashSet<Integer>();
 	public Set<Integer> wts = new HashSet<Integer>();
 
-	public void setGene(String id, int start, int end, char strand, String geneChr, 
-			String source, String type, String geneName) {
+	public void setGene(String id, int start, int end, char strand, String geneChr, String source, String type,
+			String geneName) {
 		this.geneID = id;
 		this.start = start;
 		this.end = end;
@@ -53,54 +53,18 @@ public class Gene {
 
 	public int nTrans() {
 		int i = 0;
-	    for(RegionVector r : transcripts.values()) {
-	    	i += r.getSize();
-	    }
-	    return i;
+		for (RegionVector r : transcripts.values()) {
+			i += r.getSize();
+		}
+		return i;
 	}
-	
+
 	public void getStarts2() { // Collection<Integer>
 
 		transcripts.forEach((k, v) -> {
 			System.out.println(v.getX1() + " " + v.getX2() + "\t" + "\t" + k);
 		});
-		// transcripts.forEach((k,v) -> {
-		// transcripts.forEach((k1,v1) -> {
-		// if(k.inverse().getX1() == k1.inverse().getX1()) {
-		// wtStarts.add(v1);
-		// }
-		// });
-		// });
-
-		// transcripts.forEach((k,v)->{
-		// Collection<Integer> sameStarts = new TreeSet();
-		// IntervalTree iTree = new IntervalTree();
-		// wtStarts = iTree.getIntervalsIntersecting(k.getX1(), k.getX2(),sameStarts);
-		// IntervalTree<Region> it = new IntervalTree<Region>();
-		// IntervalTree.getIntervals(k.getX1(), k.getX2(), sameStarts, -1, 3, -1, 3);
-		// sameStarts = IntervalTree.getIntervalsEqual(k.getX1(), k.getX2(),
-		// sameStarts);
-		//
-		// System.out.println("ID: " + v + "Region: " + k);
-		// });
-
 	}
-
-//	public void getStarts() {
-//
-//		RVcomperator comp = new RVcomperator();
-//		
-//		transcripts.forEach((k, v) -> {
-//			transcripts.forEach((k1, v1) -> {
-//				Region intron = k.inverse().regions.get(0);
-//
-//				if (comp.containsSameStart(intron, k1)) {
-//					wtStarts.add(k1.id);
-//				}
-//			});
-//		});
-//
-//	}
 
 	public void printWtStarts() {
 		for (String e : wtStarts) {
@@ -109,16 +73,11 @@ public class Gene {
 	}
 
 	public void printTranscriptsInverse() {
-		transcripts.forEach((k, v) -> { v.inverse().printRegions(); });
+		transcripts.forEach((k, v) -> {
+			v.inverse().printRegions();
+		});
 
 	}
-	
-	/**
-	 * Must be able to find intron with skipped exon.
-	 * 
-	 * @return
-	 */
-	// public Region findSkippedExons() {
-	// }
+
 
 }

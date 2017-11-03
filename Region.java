@@ -17,6 +17,10 @@ public class Region{
 //		this.regionID = id;
 //	}
 
+	public String getID() {
+		return regionID;
+	}
+	
 	public int getX1() {
 		return x1;
 	}

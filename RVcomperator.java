@@ -151,23 +151,20 @@ public class RVcomperator {
 			i++;
 		}
 
-		if(!outMap.isInResults(a)) {
-			
-		}
-		if (regionInRV(a, b) == false) {
-			while (b.regions.get(i).getX2() != a.getX2()) {
+			if (regionInRV(a, b) == false) {
+				while (b.regions.get(i).getX2() != a.getX2()) {
+					int start = b.regions.get(i).getX1();
+					int end = b.regions.get(i).getX2();
+					Region skippedIntron = new Region(start, end);
+					introns.addRegion(skippedIntron);
+					i++;
+				}
 				int start = b.regions.get(i).getX1();
 				int end = b.regions.get(i).getX2();
 				Region skippedIntron = new Region(start, end);
 				introns.addRegion(skippedIntron);
-				i++;
 			}
-			int start = b.regions.get(i).getX1();
-			int end = b.regions.get(i).getX2();
-			Region skippedIntron = new Region(start, end);
-			introns.addRegion(skippedIntron);
-		}
-
+		
 		return introns;
 	}
 
@@ -211,11 +208,10 @@ public class RVcomperator {
 	 * @param transID
 	 * @return
 	 */
-	public void getSkippedExon(Region intron, Gene gene, String transID, OutputMap outMap) {
+	public void getSkippedExon(Region intron, Gene gene, String transID, OutputMap outMap, RegionVector rv) {
 
 		HashSet<String> sameIntrons = new HashSet<String>();
 
-		
 		sameIntrons = getOverlappingIntrons(intron.getX1(), intron.getX2(), gene.transcripts);
 		sameIntrons.remove(transID);
 
@@ -226,13 +222,17 @@ public class RVcomperator {
 
 			queryRV = queryRV.inverse();
 
-			
+			if (outMap.isNotInResults(intron)) {
 			skippedExons = subtract(intron, queryRV, outMap);
-
+			}
+			
 			if (skippedExons.regions.size() > 0) {
 				Output output = new Output();
-				output.addSV_prots("id sv");
-				output.addWT_prots("id_wt");
+				output.sv_prots.add(rv.regions.get(0).getID());
+				output.wt_prots.add(gene.transcripts.get(id).getID());
+				
+//				output.getAllSVProtIDs(rv);
+//				output.getAllSVProtIDs(gene.transcripts.get(id));
 				output.setOutput(gene, intron, skippedExons);
 				outMap.resultList.add(output);
 			}
@@ -242,7 +242,7 @@ public class RVcomperator {
 	public void getSkippedExonFromGen(Gene gene, OutputMap outMap) {
 		for (RegionVector rv : gene.transcripts.values()) {
 			for (Region r : rv.inverse().regions) {
-				getSkippedExon(r, gene, rv.id, outMap);
+				getSkippedExon(r, gene, rv.id, outMap, rv);
 			}
 		}
 	}

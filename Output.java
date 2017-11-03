@@ -38,10 +38,22 @@ public class Output {
 		sv_prots.add(id);
 	}
 
+	public void getAllSVProtIDs(RegionVector rv) {
+		for(Region r : rv.regions) {
+			sv_prots.add(r.regionID);
+		}
+	}
+	
 	public void addWT_prots(String id) {
 		wt_prots.add(id);
 	}
 
+	public void getAllWTProtIDs(RegionVector rv) {
+		for(Region r : rv.regions) {
+			wt_prots.add(r.regionID);
+		}
+	}
+	
 	public void addWT(Region r) {
 		wt.addRegion(r);
 	}
@@ -75,7 +87,7 @@ public class Output {
 	 * 
 	 * @throws Exception
 	 */
-	public void printHeader() throws Exception {
+	public void printHeader(){
 
 		try {
 			writer.write("id" + "\t" + "symbol" + "\t" + "chr" + "\t" + "strand" + "\t" + "nprots" + "\t" + "ntrans"
@@ -93,11 +105,9 @@ public class Output {
 	 * 
 	 * @throws Exception
 	 */
-	public void printOutTxt(String outputDestination) {
+	public void printOutTxt(FileWriter file, BufferedWriter writer) {
 
 		try {
-			file = new FileWriter(outputDestination);
-			writer = new BufferedWriter(file);
 			
 			writer.write(geneID + "\t" + geneName + "\t" + chr + "\t" + strand + "\t" + nprots + "\t" + ntrans + "\t");
 
