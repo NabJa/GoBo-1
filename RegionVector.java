@@ -98,7 +98,7 @@ public class RegionVector {
 		RegionVector introns = new RegionVector();
 
 		for (int i = 0; i < regions.size() - 1; i++) {
-			Region intron = new Region(regions.get(i).getX2(), regions.get(i + 1).getX1());
+			Region intron = new Region(regions.get(i).getX2()+1, regions.get(i + 1).getX1());
 			introns.addRegion(intron);
 		}
 

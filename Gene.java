@@ -35,7 +35,7 @@ public class Gene {
 		this.type = type;
 		this.geneChr = geneChr;
 		this.geneName = geneName;
-		// this.transcripts = new HashMap<RegionVector, String>();
+		this.transcripts = new  HashMap<String, RegionVector>();
 	}
 
 	/**

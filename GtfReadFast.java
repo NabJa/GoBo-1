@@ -51,9 +51,9 @@ public class GtfReadFast {
 						gene.insertRV(newRV);
 						currentRV = newRV;
 					} else if (type.toLowerCase().equals("gene")) {
-						gene.setGene(geneID, start, end, strand, chr, source, type, geneName);
 						RVcomperator compr = new RVcomperator();
 						compr.getSkippedExonFromGen(gene, outMap);
+						gene.setGene(geneID, start, end, strand, chr, source, type, geneName);
 					}
 				}
 			}

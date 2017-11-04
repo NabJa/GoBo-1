@@ -94,12 +94,14 @@ public class RVcomperator {
 
 		HashSet<String> sameStarts = new HashSet<String>();
 
-		transcripts.forEach((id, rv) -> {
-
+		transcripts.keySet().forEach((id) -> {
+			RegionVector rv = transcripts.get(id);
+//			System.out.println("RegionVecot");
+//			printRV(rv);
 			for (Region intron : rv.inverse().regions) {
-				// System.out.println(rv.id);
-				// System.out.println("intron: " + intron.getX1() + " " + intron.getX2());
-				// printRV(rv.inverse());
+//				 System.out.println(rv.id);
+//				 System.out.println("intron: " + intron.getX1() + " " + intron.getX2());
+//				 printRV(rv.inverse());
 
 				if (intron.getX1() == start) {
 					sameStarts.add(rv.id);
@@ -121,7 +123,8 @@ public class RVcomperator {
 
 		HashSet<String> sameEnds = new HashSet<String>();
 
-		transcripts.forEach((id, rv) -> {
+		transcripts.keySet().forEach((id) -> {
+			RegionVector rv = transcripts.get(id);
 			for (Region intron : rv.inverse().regions) {
 				if (intron.getX2() == end) {
 					sameEnds.add(rv.id);
@@ -228,13 +231,14 @@ public class RVcomperator {
 			
 			if (skippedExons.regions.size() > 0) {
 				Output output = new Output();
-				output.sv_prots.add(rv.regions.get(0).getID());
-				output.wt_prots.add(gene.transcripts.get(id).getID());
-				
+				output.getAllSVProtIDs(rv);
+				output.getAllWTProtIDs(gene.transcripts.get(id));
 //				output.getAllSVProtIDs(rv);
 //				output.getAllSVProtIDs(gene.transcripts.get(id));
 				output.setOutput(gene, intron, skippedExons);
 				outMap.resultList.add(output);
+				//System.out.println(" insert intron ");
+
 			}
 		}
 	}

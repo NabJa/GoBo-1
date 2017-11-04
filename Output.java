@@ -21,9 +21,6 @@ public class Output {
 	int minSkippedBases;
 	int maxSkippedBases; // min and max number of skipped bases in any WT/SV pair
 
-	FileWriter file;
-	BufferedWriter writer;
-
 //	public Output(String outputDestination) {
 //
 //		try {
@@ -40,6 +37,7 @@ public class Output {
 
 	public void getAllSVProtIDs(RegionVector rv) {
 		for(Region r : rv.regions) {
+			if(!sv_prots.contains(r.regionID))
 			sv_prots.add(r.regionID);
 		}
 	}
@@ -50,7 +48,9 @@ public class Output {
 
 	public void getAllWTProtIDs(RegionVector rv) {
 		for(Region r : rv.regions) {
-			wt_prots.add(r.regionID);
+			if(!wt_prots.contains(r.regionID)) {
+				wt_prots.add(r.regionID);
+			}
 		}
 	}
 	
@@ -87,18 +87,18 @@ public class Output {
 	 * 
 	 * @throws Exception
 	 */
-	public void printHeader(){
-
-		try {
-			writer.write("id" + "\t" + "symbol" + "\t" + "chr" + "\t" + "strand" + "\t" + "nprots" + "\t" + "ntrans"
-					+ "\t" + "SV" + "\t" + "WT" + "\t" + "WT_prots" + "\t" + "SV_prots" + "\t" + "min_skipped_exons"
-					+ "\t" + "max_skipped_exons" + "\t" + "min_skipped_bases" + "\t" + "max_skipped_bases");
-			writer.newLine();
-
-		} catch (Exception e) {
-			throw new RuntimeException("got error while printing txt", e);
-		}
-	}
+//	public void printHeader(){
+//
+//		try {
+//			writer.write("id" + "\t" + "symbol" + "\t" + "chr" + "\t" + "strand" + "\t" + "nprots" + "\t" + "ntrans"
+//					+ "\t" + "SV" + "\t" + "WT" + "\t" + "WT_prots" + "\t" + "SV_prots" + "\t" + "min_skipped_exons"
+//					+ "\t" + "max_skipped_exons" + "\t" + "min_skipped_bases" + "\t" + "max_skipped_bases");
+//			writer.newLine();
+//
+//		} catch (Exception e) {
+//			throw new RuntimeException("got error while printing txt", e);
+//		}
+//	}
 
 	/**
 	 * prints a tsv-file of everything in object Output
@@ -145,13 +145,13 @@ public class Output {
 		}
 	}
 
-	public void closeW() {
-		try {
-			writer.close();
-		} catch (Exception e) {
-			throw new RuntimeException("got error while closing output file.", e);
-		}
-	}
+//	public void closeW() {
+//		try {
+//			writer.close();
+//		} catch (Exception e) {
+//			throw new RuntimeException("got error while closing output file.", e);
+//		}
+//	}
 
 	public void setOutput(Gene gene, Region intron, RegionVector skippedExons) {
 		this.geneID = gene.geneID;

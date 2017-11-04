@@ -5,6 +5,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.TreeSet;
 
 public class OutputMap {
 
@@ -62,25 +63,32 @@ public class OutputMap {
 		} catch (Exception e) {
 			throw new RuntimeException("got error while printing Headline!", e);
 		}
+		
 		for(Output out : resultList) {
 			out.printOutTxt(file, writer);
 		}
-	}
-	
-	public void closeW() {
 		try {
 			writer.close();
-		} catch (Exception e) {
-			throw new RuntimeException("got error while closing output file.", e);
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
 	}
 	
-	/**
-	 * probably bullshit
-	 */
-	public void closeAllout() {
-		for(Output out : resultList) {
-			out.closeW();
-		}
-	}
+//	public void closeW() {
+//		try {
+//			writer.close();
+//		} catch (Exception e) {
+//			throw new RuntimeException("got error while closing output file.", e);
+//		}
+//	}
+//	
+//	/**
+//	 * probably bullshit
+//	 */
+//	public void closeAllout() {
+//		for(Output out : resultList) {
+//			out.closeW();
+//		}
+//	}
 }
