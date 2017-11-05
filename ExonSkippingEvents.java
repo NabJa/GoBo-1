@@ -26,12 +26,11 @@ public class ExonSkippingEvents {
 			}
 		}
 
-		System.out.println("Started reading");
 		GtfReadFast gtfReader = new GtfReadFast();
 		OutputMap outMap = new OutputMap(out);
-		System.out.println("Started calc");
 		gtfReader.readFast(inp, outMap);
-		System.out.println("Started Writing");
+
 		outMap.printOutput();
+		
 	}
 }

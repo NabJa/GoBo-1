@@ -3,6 +3,8 @@ package gobi;
 import java.io.BufferedWriter;
 import java.io.FileWriter;
 import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.Set;
 
 public class Output {
 
@@ -14,22 +16,17 @@ public class Output {
 	int ntrans; // number of annotated transcripts in the gene
 	Region sv; // the SV intron as start:end
 	RegionVector wt; // the WT introns within the SV intron seperated by | as start:end
+	
 	ArrayList<String> sv_prots = new ArrayList<String>(); // IDs of the SV CDSs, seperated by |
 	ArrayList<String> wt_prots = new ArrayList<String>(); // IDs of the WT CDSs, seperated by |
+	
+	Set<String> sv_protsSet = new HashSet<String>(); // IDs of the SV CDSs, seperated by |
+	Set<String> wt_protsSet = new HashSet<String>(); // IDs of the WT CDSs, seperated by |
+	
 	int minSkippedExons;
 	int maxSkippedExons; // min and max number of skipped Exons in any WT/SV pair
-	int minSkippedBases;
-	int maxSkippedBases; // min and max number of skipped bases in any WT/SV pair
-
-//	public Output(String outputDestination) {
-//
-//		try {
-//			file = new FileWriter(outputDestination);
-//			writer = new BufferedWriter(file);
-//		} catch (Exception e) {
-//			throw new RuntimeException("got error while writing output.", e);
-//		}
-//	}
+	int minSkippedBases = Integer.MAX_VALUE - 1;
+	int maxSkippedBases = 0; // min and max number of skipped bases in any WT/SV pair
 
 	public void addSV_prots(String id) {
 		sv_prots.add(id);
@@ -37,23 +34,22 @@ public class Output {
 
 	public void getAllSVProtIDs(RegionVector rv) {
 		for(Region r : rv.regions) {
-			if(!sv_prots.contains(r.regionID))
-			sv_prots.add(r.regionID);
+			sv_protsSet.add(r.getID());
 		}
 	}
-	
+
 	public void addWT_prots(String id) {
 		wt_prots.add(id);
 	}
 
 	public void getAllWTProtIDs(RegionVector rv) {
-		for(Region r : rv.regions) {
-			if(!wt_prots.contains(r.regionID)) {
+		for (Region r : rv.regions) {
+			if (!wt_prots.contains(r.regionID)) {
 				wt_prots.add(r.regionID);
 			}
 		}
 	}
-	
+
 	public void addWT(Region r) {
 		wt.addRegion(r);
 	}
@@ -66,39 +62,21 @@ public class Output {
 
 	public void insertMaxSkippedExons(int mxse) {
 		if (mxse > maxSkippedExons) {
-			mxse = maxSkippedExons;
+			this.maxSkippedExons = mxse;
 		}
 	}
 
 	public void insertMinSkippedBases(int msb) {
-		if (msb < maxSkippedExons) {
-			msb = maxSkippedExons;
+		if (msb < minSkippedBases) {
+			this.minSkippedBases = msb+1;
 		}
 	}
 
 	public void insertMaxSkippedBases(int mxsb) {
 		if (mxsb > maxSkippedExons) {
-			mxsb = maxSkippedExons;
+			this.maxSkippedBases = mxsb+1;
 		}
 	}
-
-	/**
-	 * Print tsv-file header of categories of the Object Output.
-	 * 
-	 * @throws Exception
-	 */
-//	public void printHeader(){
-//
-//		try {
-//			writer.write("id" + "\t" + "symbol" + "\t" + "chr" + "\t" + "strand" + "\t" + "nprots" + "\t" + "ntrans"
-//					+ "\t" + "SV" + "\t" + "WT" + "\t" + "WT_prots" + "\t" + "SV_prots" + "\t" + "min_skipped_exons"
-//					+ "\t" + "max_skipped_exons" + "\t" + "min_skipped_bases" + "\t" + "max_skipped_bases");
-//			writer.newLine();
-//
-//		} catch (Exception e) {
-//			throw new RuntimeException("got error while printing txt", e);
-//		}
-//	}
 
 	/**
 	 * prints a tsv-file of everything in object Output
@@ -108,7 +86,7 @@ public class Output {
 	public void printOutTxt(FileWriter file, BufferedWriter writer) {
 
 		try {
-			
+
 			writer.write(geneID + "\t" + geneName + "\t" + chr + "\t" + strand + "\t" + nprots + "\t" + ntrans + "\t");
 
 			writer.write(sv.getX1() + ":" + sv.getX2() + "\t");
@@ -131,10 +109,12 @@ public class Output {
 			writer.write(str1 + "\t");
 
 			String str2 = "";
-			for (String id : sv_prots) {
+			for (String id : sv_protsSet) {
 				str2 += ("|" + id);
+//				System.out.println(id);
 			}
 			str2 = str2.substring(1, str2.length());
+//			System.out.println("svprot: " + str2);
 			writer.write(str2 + "\t");
 
 			writer.write(minSkippedExons + "\t" + maxSkippedExons + "\t" + minSkippedBases + "\t" + maxSkippedBases);
@@ -144,14 +124,6 @@ public class Output {
 			throw new RuntimeException("got error while printing output in txt.", e);
 		}
 	}
-
-//	public void closeW() {
-//		try {
-//			writer.close();
-//		} catch (Exception e) {
-//			throw new RuntimeException("got error while closing output file.", e);
-//		}
-//	}
 
 	public void setOutput(Gene gene, Region intron, RegionVector skippedExons) {
 		this.geneID = gene.geneID;
@@ -164,8 +136,6 @@ public class Output {
 		this.wt = skippedExons;
 		this.minSkippedExons = 1;
 		this.maxSkippedExons = 1;
-		this.minSkippedBases = 1;
-		this.maxSkippedBases = 1;
 	}
 
 }

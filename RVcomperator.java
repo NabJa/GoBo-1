@@ -225,20 +225,30 @@ public class RVcomperator {
 
 			queryRV = queryRV.inverse();
 
-			if (outMap.isNotInResults(intron)) {
+//			if (outMap.isNotInResults(intron)) {
+//			skippedExons = subtract(intron, queryRV, outMap);
+//			}
+
+			if (!outMap.isInResultMap(intron)) {
 			skippedExons = subtract(intron, queryRV, outMap);
 			}
 			
 			if (skippedExons.regions.size() > 0) {
 				Output output = new Output();
+				
+				int skippedBases = skippedExons.inverse().getRegionLength();
+				output.insertMinSkippedBases(skippedBases);
+				output.insertMaxSkippedBases(skippedBases);
+				
 				output.getAllSVProtIDs(rv);
 				output.getAllWTProtIDs(gene.transcripts.get(id));
+				
 //				output.getAllSVProtIDs(rv);
 //				output.getAllSVProtIDs(gene.transcripts.get(id));
 				output.setOutput(gene, intron, skippedExons);
-				outMap.resultList.add(output);
-				//System.out.println(" insert intron ");
 
+				outMap.resultMap.put(intron ,output);
+//				outMap.resultMap.put(intron, output);
 			}
 		}
 	}

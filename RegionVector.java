@@ -37,6 +37,14 @@ public class RegionVector {
 		return x2 - x1;
 	}
 
+	public int getRegionLength() {
+		int len = 0;
+		for(Region r : regions) {
+			len += r.getLength();
+		}
+		return len;
+	}
+	
 	public void addRegionUnsorted(Region region) {
 		regions.add(region);
 		// Collection<Integer> sameStarts = new TreeSet();
