@@ -25,6 +25,15 @@ public class Gene {
 	public Set<Integer> wtEnds = new HashSet<Integer>();
 	public Set<Integer> wts = new HashSet<Integer>();
 
+
+	public void setGene(String id, String geneChr, String geneName, char strand) {
+		this.geneID = id;
+		this.geneChr = geneChr;
+		this.geneName = geneName;
+		this.strand = strand;
+		this.transcripts = new  HashMap<String, RegionVector>();
+	}
+	
 	public void setGene(String id, int start, int end, char strand, String geneChr, String source, String type,
 			String geneName) {
 		this.geneID = id;

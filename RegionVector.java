@@ -15,6 +15,10 @@ public class RegionVector {
 	public RegionVector() {
 	} // empty constructor to be able to create without variables or with
 
+	public RegionVector(String id) {
+		this.id = id;
+	}
+	
 	public RegionVector(String id, int x1, int x2) {
 		this.id = id;
 		this.x1 = x1;

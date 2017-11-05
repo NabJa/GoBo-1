@@ -13,10 +13,12 @@ public class GtfReadFast {
 		RegionVector currentRV = new RegionVector();
 		Gene gene = new Gene();
 
+		
 		try {
 			File file = new File(path);
 			reader = new BufferedReader(new FileReader(file));
-
+			int i = 0;
+			
 			String rline = "";
 			// jumps over first annotation starting with "#"
 			// while ((rline = reader.readLine()) != null && rline.startsWith("#")) {
@@ -25,6 +27,11 @@ public class GtfReadFast {
 			// }
 
 			while ((rline = reader.readLine()) != null) {
+
+				i++;
+				if(i > 15000) {
+					break;
+				}
 
 				if (rline.indexOf('#') != 0) {
 
@@ -59,6 +66,7 @@ public class GtfReadFast {
 						RVcomperator compr = new RVcomperator();
 						compr.getSkippedExonFromGen(gene, outMap);
 						gene.setGene(geneID, start, end, strand, chr, source, type, geneName);
+						i = 0;
 					}
 				}
 			}

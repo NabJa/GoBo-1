@@ -96,12 +96,12 @@ public class RVcomperator {
 
 		transcripts.keySet().forEach((id) -> {
 			RegionVector rv = transcripts.get(id);
-//			System.out.println("RegionVecot");
-//			printRV(rv);
+			// System.out.println("RegionVecot");
+			// printRV(rv);
 			for (Region intron : rv.inverse().regions) {
-//				 System.out.println(rv.id);
-//				 System.out.println("intron: " + intron.getX1() + " " + intron.getX2());
-//				 printRV(rv.inverse());
+				// System.out.println(rv.id);
+				// System.out.println("intron: " + intron.getX1() + " " + intron.getX2());
+				// printRV(rv.inverse());
 
 				if (intron.getX1() == start) {
 					sameStarts.add(rv.id);
@@ -146,15 +146,17 @@ public class RVcomperator {
 		return setA;
 	}
 
-	public RegionVector subtract(Region a, RegionVector b, OutputMap outMap) {
+	public RegionVector subtract(Region a, RegionVector b, OutputMap outMap, Output output, RegionVector rv1) {
 		RegionVector introns = new RegionVector();
 		int i = 0;
 
-		while (b.regions.get(i).getX1() != a.getX1() && i < b.regions.size() - 1) {
-			i++;
-		}
+		if (b.regions.size() > 1) {
 
 			if (regionInRV(a, b) == false) {
+
+				while (b.regions.get(i).getX1() != a.getX1() && i < b.regions.size() - 1) {
+					i++;
+				}
 				while (b.regions.get(i).getX2() != a.getX2()) {
 					int start = b.regions.get(i).getX1();
 					int end = b.regions.get(i).getX2();
@@ -166,8 +168,25 @@ public class RVcomperator {
 				int end = b.regions.get(i).getX2();
 				Region skippedIntron = new Region(start, end);
 				introns.addRegion(skippedIntron);
+
+				// int skippedBases = introns.inverse().getRegionLength();
+				// output.insertMinSkippedBases(skippedBases);
+				// output.insertMaxSkippedBases(skippedBases);
+				 output.getAllWTProtIDs(rv1);
+
 			}
-		
+
+		} else {
+			output.getAllSVProtIDs(b);
+			
+			// output.getAllSVProtIDs(b);
+			// if (b.regions.get(0).getX1() + 1 == a.getX1() && b.regions.get(0).getX2() ==
+			// a.getX2()) {
+			// int start = b.regions.get(0).getX1();
+			// int end = b.regions.get(0).getX2();
+			// Region skippedIntron = new Region(start, end);
+			// introns.addRegion(skippedIntron);
+		}
 		return introns;
 	}
 
@@ -213,6 +232,7 @@ public class RVcomperator {
 	 */
 	public void getSkippedExon(Region intron, Gene gene, String transID, OutputMap outMap, RegionVector rv) {
 
+		Output output = new Output();
 		HashSet<String> sameIntrons = new HashSet<String>();
 
 		sameIntrons = getOverlappingIntrons(intron.getX1(), intron.getX2(), gene.transcripts);
@@ -221,34 +241,28 @@ public class RVcomperator {
 		for (String id : sameIntrons) {
 
 			RegionVector skippedExons = new RegionVector();
-			RegionVector queryRV = gene.transcripts.get(id);
+			RegionVector queryRV1 = gene.transcripts.get(id);
 
-			queryRV = queryRV.inverse();
-
-//			if (outMap.isNotInResults(intron)) {
-//			skippedExons = subtract(intron, queryRV, outMap);
-//			}
+			RegionVector queryRV = queryRV1.inverse();
 
 			if (!outMap.isInResultMap(intron)) {
-			skippedExons = subtract(intron, queryRV, outMap);
+				skippedExons = subtract(intron, queryRV, outMap, output, queryRV1);
 			}
+
+			output.getAllSVProtIDs(rv);
 			
 			if (skippedExons.regions.size() > 0) {
-				Output output = new Output();
-				
 				int skippedBases = skippedExons.inverse().getRegionLength();
+				
 				output.insertMinSkippedBases(skippedBases);
 				output.insertMaxSkippedBases(skippedBases);
-				
-				output.getAllSVProtIDs(rv);
-				output.getAllWTProtIDs(gene.transcripts.get(id));
-				
-//				output.getAllSVProtIDs(rv);
-//				output.getAllSVProtIDs(gene.transcripts.get(id));
+
+	//			output.getAllWTProtIDs(queryRV1);
+
 				output.setOutput(gene, intron, skippedExons);
 
-				outMap.resultMap.put(intron ,output);
-//				outMap.resultMap.put(intron, output);
+				outMap.resultMap.put(intron, output);
+				// outMap.resultMap.put(intron, output);
 			}
 		}
 	}

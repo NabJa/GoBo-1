@@ -76,8 +76,8 @@ public class OutputMap {
 	public void printOutput() {
 		try {
 			writer.write("id" + "\t" + "symbol" + "\t" + "chr" + "\t" + "strand" + "\t" + "nprots" + "\t" + "ntrans"
-					+ "\t" + "SV" + "\t" + "WT" + "\t" + "WT_prots" + "\t" + "SV_prots" + "\t" + "min_skipped_exons"
-					+ "\t" + "max_skipped_exons" + "\t" + "min_skipped_bases" + "\t" + "max_skipped_bases");
+					+ "\t" + "SV" + "\t" + "WT" + "\t" + "WT_prots" + "\t" + "SV_prots" + "\t" + "min_skipped_exon"
+					+ "\t" + "max_skipped_exon" + "\t" + "min_skipped_bases" + "\t" + "max_skipped_bases");
 			writer.newLine();
 
 		} catch (Exception e) {
@@ -90,10 +90,8 @@ public class OutputMap {
 		
 		try {
 			writer.close();
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+		} catch (Exception e) {
+			throw new RuntimeException("got error while closing writer!", e);		}
 	}
 	
 	public void printOutput1() {
@@ -112,9 +110,8 @@ public class OutputMap {
 		}
 		try {
 			writer.close();
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+		} catch (Exception e) {
+			throw new RuntimeException("got error while printing Output!", e);
 		}
 	}
 	

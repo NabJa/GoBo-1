@@ -11,11 +11,11 @@ public class Region{
 		this.x2 = x2;
 	}
 
-	// Region(int x1, int x2, String id) {
-	// this.x1 = x1;
-	// this.x2 = x2;
-	// this.regionID = id;
-	// }
+	 Region(int x1, int x2, String id) {
+	 this.x1 = x1;
+	 this.x2 = x2;
+	 this.regionID = id;
+	 }
 
 	public String getID() {
 		return regionID;
