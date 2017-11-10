@@ -233,19 +233,17 @@ public class RVcomperator {
 
 		HashSet<String> wts = new HashSet<String>();
 		Set<String> skippedExons = new HashSet<String>();
-
 		RegionVector rv = transcripts.get(id); // Get transcript values
 
-		int skippedExonsInTranscript = 1;
+		int skippedExonsInTranscript = 0;
 		for (Region r : rv.regions) // For every Region of transcript
 		{
 			if (intron.getX1() < r.getX1() && intron.getX2() > r.getX2()) // if region is in intron:
 			{
 				wts.add(r.regionID);
-
+				skippedExonsInTranscript++;
 				out.insertMaxSkippedExons(skippedExonsInTranscript);
 				out.insertMinSkippedExons(skippedExonsInTranscript);
-				skippedExonsInTranscript++;
 
 				skippedExons.add(r.regionID);
 
@@ -256,6 +254,19 @@ public class RVcomperator {
 		}
 
 		return wts;
+	}
+
+	public HashSet<String> removeSV(Region intron, HashSet<String> sameIntrons, Gene gene) {
+		HashSet<String> wildtypes = new HashSet<String>();
+		for (String id : sameIntrons) {
+			RegionVector rv = gene.transcripts.get(id).inverse();
+			for (Region r : rv.regions) {
+				if (r.getX1() != intron.getX1() || r.getX2() != intron.getX2()) {
+					wildtypes.add(id);
+				}
+			}
+		}
+		return wildtypes;
 	}
 
 	/**
@@ -273,30 +284,32 @@ public class RVcomperator {
 		sameIntrons = getOverlappingIntrons(intron.getX1(), intron.getX2(), gene.transcripts);
 		// sameIntrons.remove(rv.id);
 
-		// HashSet<String> sv_prots = getSVs(intron, gene.transcripts, output, rv);
-		// HashSet<String> wt_prots = getWTs(intron, gene.transcripts, output);
+		HashSet<String> wildtypes = removeSV(intron, sameIntrons, gene);
 
 		RegionVector skippedExons = new RegionVector();
 		RegionVector skipped = new RegionVector();
 
-		for (String id : sameIntrons) {
+		if (!outMap.isInResultMap(intron)) {
+			for (String id : wildtypes) {
+//				if(intron.getX1() == 21 && intron.getX2() == 70) {
+//					System.out.println(wildtypes);
+//				}
+				
+				HashSet<String> sv_prots = getSVs(intron, gene.transcripts, output, rv);
+				HashSet<String> wt_prots = getWTs(intron, id, gene.transcripts, output);
 
-			HashSet<String> sv_prots = getSVs(intron, gene.transcripts, output, rv);
-			HashSet<String> wt_prots = getWTs(intron, id, gene.transcripts, output);
+				RegionVector queryRV1 = gene.transcripts.get(id);
 
-			RegionVector queryRV1 = gene.transcripts.get(id);
+				RegionVector queryRV = queryRV1.inverse();
 
-			RegionVector queryRV = queryRV1.inverse();
+				skippedExons = subtract(intron, queryRV, outMap, output, queryRV1, wildtypes);
 
-			if (!outMap.isInResultMap(intron)) {
-				skippedExons = subtract(intron, queryRV, outMap, output, queryRV1, sameIntrons);
-			}
-
-			skipped.addNewRegions(skippedExons);
-
-			if (skippedExons.regions.size() > 1 && !outMap.isInResultMap(intron)) {
-				output.setOutput(gene, intron, skipped);
-				outMap.resultMap.put(intron, output);
+				skipped.addNewRegions(skippedExons);
+				
+				if (skipped.regions.size() > 1) {
+					output.setOutput(gene, intron, skipped);
+					outMap.resultMap.put(intron, output);
+				}
 			}
 		}
 

@@ -33,6 +33,19 @@ public class Region{
 		return x2 - x1;
 	}
 
+	@Override
+	public boolean equals(Object r) {
+		boolean retVal = false;
+
+        if (r instanceof Region){
+        	if(((Region) r).getX1() == this.getX1() && ((Region) r).getX2() == this.getX2() ) {
+        		retVal = true;
+        	}
+        }
+
+     return retVal;
+	}
+	
 	public int hashCode() {
 		return ((x1 * 104723) % 104729) + ((x2 * 104717) % 104711);
 	}

@@ -32,10 +32,13 @@ public class ExonSkippingEvents {
 
 		OutputMap outMap = new OutputMap(out);
 		RVcomperator compr = new RVcomperator();
+//		ExonSkipCalc compr = new ExonSkipCalc();
+		
 		
 		for(Gene gene : cdsReader.genes.values()) {
 			compr.getSkippedExonFromGen(gene, outMap);
 		}
 		outMap.printOutput1();
+				
 	}
 }

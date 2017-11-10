@@ -130,5 +130,5 @@ public class Output {
 		this.sv = intron;
 		this.wt = skippedExons;
 	}
-
+	
 }
