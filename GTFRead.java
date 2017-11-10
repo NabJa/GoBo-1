@@ -53,7 +53,7 @@ public class GTFRead {
 				int start = Integer.parseInt(line[3]); // line[3] is always start and should be read as integer
 				int end = Integer.parseInt(line[4]); // line[3] is always end and should be read as integer
 				String geneID = line[8];
-				char strand = line[6].charAt(0);
+				String strand = line[6];
 				String geneName = line[10];
 
 				if (type.toLowerCase().equals("cds")) {

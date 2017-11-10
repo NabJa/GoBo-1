@@ -13,12 +13,12 @@ public class RegionVector {
 	public ArrayList<Region> regions = new ArrayList<Region>(); // maybe Vector instead of ArrayList???
 
 	public RegionVector() {
-	} // empty constructor to be able to create without variables or with
+	}
 
 	public RegionVector(String id) {
 		this.id = id;
 	}
-	
+
 	public RegionVector(String id, int x1, int x2) {
 		this.id = id;
 		this.x1 = x1;
@@ -43,19 +43,22 @@ public class RegionVector {
 
 	public int getRegionLength() {
 		int len = 0;
-		for(Region r : regions) {
+		for (Region r : regions) {
 			len += r.getLength();
 		}
 		return len;
 	}
-	
+
 	public void addRegionUnsorted(Region region) {
 		regions.add(region);
-		// Collection<Integer> sameStarts = new TreeSet();
-		// IntervalTree iTree = new IntervalTree();
-		//
-		// wtStarts = iTree.getIntervalsIntersecting(region.getX1(),
-		// region.getX2(),regions);
+	}
+
+	public void addNewRegions(RegionVector rv) {
+		for (Region r : rv.regions) {
+			if (!regions.contains(r)) {
+				regions.add(r);
+			}
+		}
 	}
 
 	/**
@@ -68,7 +71,8 @@ public class RegionVector {
 			regions.add(region);
 		} else {
 			for (int i = 0; i < regions.size(); i++) {
-				if(regions.get(i).getX1() < region.getX1()) continue;
+				if (regions.get(i).getX1() < region.getX1())
+					continue;
 				regions.add(i, region);
 				return;
 			}
@@ -110,7 +114,7 @@ public class RegionVector {
 		RegionVector introns = new RegionVector();
 
 		for (int i = 0; i < regions.size() - 1; i++) {
-			Region intron = new Region(regions.get(i).getX2()+1, regions.get(i + 1).getX1());
+			Region intron = new Region(regions.get(i).getX2() + 1, regions.get(i + 1).getX1());
 			introns.addRegion(intron);
 		}
 

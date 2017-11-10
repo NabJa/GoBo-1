@@ -11,30 +11,27 @@ public class Output {
 	String geneID; //
 	String geneName; //
 	String chr; // chromosome
-	char strand; //
+	String strand; //
 	int nprots; // number of annotated CDS in the gene
 	int ntrans; // number of annotated transcripts in the gene
 	Region sv; // the SV intron as start:end
 	RegionVector wt; // the WT introns within the SV intron seperated by | as start:end
 	
-	ArrayList<String> sv_prots = new ArrayList<String>(); // IDs of the SV CDSs, seperated by |
-	ArrayList<String> wt_prots = new ArrayList<String>(); // IDs of the WT CDSs, seperated by |
+	HashSet<String> sv_prots = new HashSet<String>(); // IDs of the SV CDSs, seperated by |
+	HashSet<String> wt_prots = new HashSet<String>(); // IDs of the WT CDSs, seperated by |
 	
-	Set<String> sv_protsSet = new HashSet<String>(); // IDs of the SV CDSs, seperated by |
-	Set<String> wt_protsSet = new HashSet<String>(); // IDs of the WT CDSs, seperated by |
-	
-	int minSkippedExons;
-	int maxSkippedExons; // min and max number of skipped Exons in any WT/SV pair
+	int minSkippedExons = Integer.MAX_VALUE -1;
+	int maxSkippedExons = 0; // min and max number of skipped Exons in any WT/SV pair
 	int minSkippedBases = Integer.MAX_VALUE - 1;
 	int maxSkippedBases = 0; // min and max number of skipped bases in any WT/SV pair
-
+    
 	public void addSV_prots(String id) {
 		sv_prots.add(id);
 	}
 
 	public void getAllSVProtIDs(RegionVector rv) {
 		for(Region r : rv.regions) {
-			sv_protsSet.add(r.getID());
+			sv_prots.add(r.getID());
 		}
 	}
 
@@ -56,8 +53,8 @@ public class Output {
 
 	public void insertMinSkippedExons(int mse) {
 		if (mse < minSkippedExons) {
-			mse = minSkippedExons;
-		}
+			this.minSkippedExons = mse;
+			}
 	}
 
 	public void insertMaxSkippedExons(int mxse) {
@@ -109,12 +106,10 @@ public class Output {
 			writer.write(str1 + "\t");
 
 			String str2 = "";
-			for (String id : sv_protsSet) {
+			for (String id : sv_prots) {
 				str2 += ("|" + id);
-//				System.out.println(id);
 			}
 			str2 = str2.substring(1, str2.length());
-//			System.out.println("svprot: " + str2);
 			writer.write(str2 + "\t");
 
 			writer.write(minSkippedExons + "\t" + maxSkippedExons + "\t" + minSkippedBases + "\t" + maxSkippedBases);
@@ -134,8 +129,6 @@ public class Output {
 		this.ntrans = gene.nTrans();
 		this.sv = intron;
 		this.wt = skippedExons;
-		this.minSkippedExons = 1;
-		this.maxSkippedExons = 1;
 	}
 
 }

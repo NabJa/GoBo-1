@@ -41,7 +41,7 @@ public class GtfReadFast {
 					String type = line[2];
 					int start = Integer.parseInt(line[3]); // line[3] is always start and should be read as integer
 					int end = Integer.parseInt(line[4]); // line[3] is always end and should be read as integer
-					char strand = line[6].charAt(0);
+					String strand = line[6];
 //					String geneID = line[8].substring(line[8].indexOf('\"') + 1, line[8].length() - 1);
 //					String geneName = line[9].substring(line[9].indexOf('\"') + 1, line[9].length() - 1);
 

@@ -13,7 +13,7 @@ public class Gene {
 	public String geneID;
 	public int start;
 	public int end;
-	public char strand;
+	public String strand;
 	public String source;
 	public String type;
 	public String geneChr;
@@ -26,7 +26,7 @@ public class Gene {
 	public Set<Integer> wts = new HashSet<Integer>();
 
 
-	public void setGene(String id, String geneChr, String geneName, char strand) {
+	public void setGene(String id, String geneChr, String geneName, String strand) {
 		this.geneID = id;
 		this.geneChr = geneChr;
 		this.geneName = geneName;
@@ -34,7 +34,7 @@ public class Gene {
 		this.transcripts = new  HashMap<String, RegionVector>();
 	}
 	
-	public void setGene(String id, int start, int end, char strand, String geneChr, String source, String type,
+	public void setGene(String id, int start, int end, String strand, String geneChr, String source, String type,
 			String geneName) {
 		this.geneID = id;
 		this.start = start;

@@ -14,53 +14,35 @@ public class OutputMap {
 	FileWriter file;
 	BufferedWriter writer;
 	String outputDestination;
-	
+
 	public OutputMap(String outputDestination) {
 		this.outputDestination = outputDestination;
 		try {
-			this.file = new FileWriter(outputDestination);
+			this.file = new FileWriter(outputDestination); 
 			this.writer = new BufferedWriter(file);
 		} catch (Exception e) {
 			throw new RuntimeException("got error while writing output from OutputMap.", e);
 		}
 	}
-	
+
 	TreeMap<Region, Output> resultMap = new TreeMap<Region, Output>(new RegionComperator());
 	ArrayList<Output> resultList = new ArrayList<Output>();
 
-	
 	public boolean isInResultMap(Region r) {
-		if(resultMap.containsKey(r)) {
+		if (resultMap.containsKey(r)) {
 			return true;
 		} else {
 			return false;
 		}
 	}
-	
+
 	public boolean isNotInResults(Region r) {
-		if(resultMap.containsKey(r)) {
+		if (resultMap.containsKey(r)) {
 			return true;
-		}
-		else {
+		} else {
 			return false;
 		}
 
-//		boolean answer = true;
-//		for (Output out : resultList) {
-//			//is intron already annotated?
-//			if (out.sv.getX1() == r.getX1() && out.sv.getX2() == r.getX2()) {
-//				answer = false;
-//			}
-//		}
-//		return answer;
-	}
-
-	public void addIfnew(Region r, Output out) {
-		
-		
-//		if (isNotInResults(r)) {
-//			resultList.add(out);
-//		}
 	}
 
 	public void addToResultIfNew(Region region, Output output) {
@@ -83,29 +65,30 @@ public class OutputMap {
 		} catch (Exception e) {
 			throw new RuntimeException("got error while printing Headline!", e);
 		}
-		
-		for(Region r : resultMap.keySet()) {
+
+		for (Region r : resultMap.keySet()) {
 			resultMap.get(r).printOutTxt(file, writer);
 		}
-		
+
 		try {
 			writer.close();
 		} catch (Exception e) {
-			throw new RuntimeException("got error while closing writer!", e);		}
+			throw new RuntimeException("got error while closing writer!", e);
+		}
 	}
-	
+
 	public void printOutput1() {
 		try {
 			writer.write("id" + "\t" + "symbol" + "\t" + "chr" + "\t" + "strand" + "\t" + "nprots" + "\t" + "ntrans"
-					+ "\t" + "SV" + "\t" + "WT" + "\t" + "WT_prots" + "\t" + "SV_prots" + "\t" + "min_skipped_exons"
-					+ "\t" + "max_skipped_exons" + "\t" + "min_skipped_bases" + "\t" + "max_skipped_bases");
+					+ "\t" + "SV" + "\t" + "WT" + "\t" + "WT_prots" + "\t" + "SV_prots" + "\t" + "min_skipped_exon"
+					+ "\t" + "max_skipped_exon" + "\t" + "min_skipped_bases" + "\t" + "max_skipped_bases");
 			writer.newLine();
 
 		} catch (Exception e) {
 			throw new RuntimeException("got error while printing Headline!", e);
 		}
-		
-		for(Output out : resultMap.values()) {
+
+		for (Output out : resultMap.values()) {
 			out.printOutTxt(file, writer);
 		}
 		try {
@@ -114,5 +97,5 @@ public class OutputMap {
 			throw new RuntimeException("got error while printing Output!", e);
 		}
 	}
-	
+
 }

@@ -7,102 +7,6 @@ import java.util.TreeSet;
 
 public class ExonSkipCalc {
 
-	public void printRV(RegionVector rv) {
-		for (Region r : rv.regions) {
-			System.out.println(r.getX1() + " " + r.getX2() + " ");
-		}
-	}
-
-	public HashSet<String> getSplicedVariants(int start, int end, HashMap<String, RegionVector> transcripts) {
-
-		HashSet<String> splicedVariants = new HashSet<String>();
-
-		transcripts.keySet().forEach((id) -> {
-			RegionVector rv = transcripts.get(id);
-
-			for (Region intron : rv.inverse().regions) {
-				if (intron.getX1() == start && intron.getX2() == end) {
-					splicedVariants.add(rv.id);
-				}
-			}
-		});
-
-		return splicedVariants;
-	}
-
-	public HashSet<String> getWTS(int start, int end, HashMap<String, RegionVector> transcripts) {
-
-		HashSet<String> WTS = new HashSet<String>();
-
-		transcripts.keySet().forEach((id) -> {
-			RegionVector rv = transcripts.get(id);
-
-			for (Region intron : rv.inverse().regions) {
-				int sameStart = 0;
-				int sameEnds = 0;
-				
-				if (intron.getX1() == start) {
-					sameStart = 1;
-				} else if (intron.getX2() == end) {
-					sameEnds = 1;
-				} else if ((sameStart + sameEnds) == 2) {
-					WTS.add(rv.id);
-				}
-			}
-		});
-		return WTS;
-	}
-
-	public HashSet<String> hasSkip(HashSet<String> sv, )
-	
-	/**
-	 * Retains 2 sets. You get all elements that are in BOTH sets.
-	 * 
-	 * @param a
-	 * @param b
-	 * @return
-	 */
-	public HashSet<String> retainLists(HashSet<String> setA, HashSet<String> setB) {
-		setA.retainAll(setB);
-		return setA;
-	}
-
-	public RegionVector subtract(Region a, RegionVector b, OutputMap outMap) {
-		RegionVector introns = new RegionVector();
-		int i = 0;
-
-		System.out.println(b.id);
-		printRV(b);
-
-		if (b.regions.size() > 1) {
-			if (regionInRV(a, b) == false) {
-
-				while (b.regions.get(i).getX1() != a.getX1() && i < b.regions.size() - 1) {
-					i++;
-				}
-				while (b.regions.get(i).getX2() != a.getX2()) {
-					int start = b.regions.get(i).getX1();
-					int end = b.regions.get(i).getX2();
-					Region skippedIntron = new Region(start, end);
-					introns.addRegion(skippedIntron);
-					i++;
-				}
-				int start = b.regions.get(i).getX1();
-				int end = b.regions.get(i).getX2();
-				Region skippedIntron = new Region(start, end);
-				introns.addRegion(skippedIntron);
-			}
-		} else {
-			if (b.regions.get(0).getX1() + 1 == a.getX1() && b.regions.get(0).getX2() == a.getX2()) {
-				int start = b.regions.get(0).getX1();
-				int end = b.regions.get(0).getX2();
-				Region skippedIntron = new Region(start, end);
-				introns.addRegion(skippedIntron);
-			}
-		}
-		return introns;
-	}
-
 	public boolean regionInRV(Region r, RegionVector rv) {
 		boolean bol = false;
 		for (Region a : rv.regions) {
@@ -113,84 +17,204 @@ public class ExonSkipCalc {
 		return bol;
 	}
 
-	/**
-	 * Returns a HashSet with strings of the ids of RVs with same start AND same end
-	 * in any intron combination
-	 * 
-	 * @param start
-	 * @param end
-	 * @param transcripts
-	 * @return
-	 */
 	public HashSet<String> getOverlappingIntrons(int start, int end, HashMap<String, RegionVector> transcripts) {
 
-		HashSet<String> splicedV = new HashSet<String>();
-		HashSet<String> wildT = new HashSet<String>();
+		HashSet<String> sameStarts = new HashSet<String>();
+		HashSet<String> sameEnds = new HashSet<String>();
 		HashSet<String> sameIntrons = new HashSet<String>();
 
-		splicedV = getSplicedVariants(start, end, transcripts);
-		
-		wildT = getWTS(start, end, transcripts);
+		sameStarts = getStarts(start, transcripts);
+		sameEnds = getEnds(end, transcripts);
 
 		sameIntrons = getSameIntron(sameStarts, sameEnds);
 
 		return sameIntrons;
+	}	
+	public HashSet<String> getSameIntron(HashSet<String> setA, HashSet<String> setB) {
+		setA.retainAll(setB);
+		return setA;
+	}
+	public HashSet<String> getStarts(int start, HashMap<String, RegionVector> transcripts) {
+
+		HashSet<String> sameStarts = new HashSet<String>();
+
+		transcripts.keySet().forEach((id) -> {
+			RegionVector rv = transcripts.get(id);
+			// System.out.println("RegionVecot");
+			// printRV(rv);
+			for (Region intron : rv.inverse().regions) {
+				// System.out.println(rv.id);
+				// System.out.println("intron: " + intron.getX1() + " " + intron.getX2());
+				// printRV(rv.inverse());
+
+				if (intron.getX1() == start) {
+					sameStarts.add(rv.id);
+				}
+			}
+		});
+
+		return sameStarts;
+	}
+	public HashSet<String> getEnds(int end, HashMap<String, RegionVector> transcripts) {
+
+		HashSet<String> sameEnds = new HashSet<String>();
+
+		transcripts.keySet().forEach((id) -> {
+			RegionVector rv = transcripts.get(id);
+			for (Region intron : rv.inverse().regions) {
+				if (intron.getX2() == end) {
+					sameEnds.add(rv.id);
+				}
+			}
+		});
+		return sameEnds;
 	}
 
-	/**
-	 * 
-	 * @param intron
-	 * @param gene
-	 * @param transID
-	 * @return
-	 */
-	public void getSkippedExon(Region intron, Gene gene, String transID, OutputMap outMap, RegionVector rv) {
+	
+	public HashSet<String> getSVs(Region intron, HashMap<String, RegionVector> transcripts, Output out) {
 
-		HashSet<String> sameIntrons = new HashSet<String>();
+		HashSet<String> svs = new HashSet<String>();
 
-		sameIntrons = getOverlappingIntrons(intron.getX1(), intron.getX2(), gene.transcripts);
-		sameIntrons.remove(transID);
+		transcripts.keySet().forEach((id) -> { // For every transcript ID
 
-		for (String id : sameIntrons) {
+			RegionVector rv = transcripts.get(id); // Get transcript values
 
-			RegionVector skippedExons = new RegionVector();
-			RegionVector queryRV = gene.transcripts.get(id);
-
-			queryRV = queryRV.inverse();
-
-			// if (outMap.isNotInResults(intron)) {
-			// skippedExons = subtract(intron, queryRV, outMap);
-			// }
-
-			if (!outMap.isInResultMap(intron)) {
-				skippedExons = subtract(intron, queryRV, outMap);
+			for (Region r : rv.inverse().regions) // For every Intron in transcript:
+			{
+				if (r.getX1() == intron.getX1() && r.getX2() == intron.getX2()) // If intron == intron of any other
+																				// transcript
+				{
+					svs.add(rv.id);
+				}
 			}
+		});
+		out.sv_prots = svs;
+		return svs;
+	}
 
-			if (skippedExons.regions.size() > 0) {
-				Output output = new Output();
+	public HashSet<String> getWTs(Region intron, HashMap<String, RegionVector> transcripts, Output out) {
 
-				int skippedBases = skippedExons.inverse().getRegionLength();
-				output.insertMinSkippedBases(skippedBases);
-				output.insertMaxSkippedBases(skippedBases);
+		HashSet<String> wts = new HashSet<String>();
+		Set<String> skippedExons = new HashSet<String>();
 
-				output.getAllSVProtIDs(rv);
-				output.getAllWTProtIDs(gene.transcripts.get(id));
+		for (String id : transcripts.keySet()) // For every transcript ID
+		{
+			RegionVector rv = transcripts.get(id); // Get transcript values
 
-				// output.getAllSVProtIDs(rv);
-				// output.getAllSVProtIDs(gene.transcripts.get(id));
-				output.setOutput(gene, intron, skippedExons);
+			for (Region r : rv.regions) // For every Region of transcript
+			{
 
-				outMap.resultMap.put(intron, output);
-				// outMap.resultMap.put(intron, output);
+				// System.out.println("intron " + intron.getX1() + " " + intron.getX2());
+				// System.out.println("region " + r.getX1() + " " + r.getX2());
+
+				if (intron.getX1() < r.getX1() && intron.getX2() > r.getX2()) // if region is in intron:
+				{
+					// System.out.println(rv.id);
+
+					wts.add(rv.id);
+
+					skippedExons.add(r.regionID);
+
+				}
 			}
 		}
+
+		out.wt_prots.addAll(skippedExons);
+		return wts;
+	}
+
+	public RegionVector getIntrons(Region intron, HashMap<String, RegionVector> transcripts, Output out) {
+
+		RegionVector skippedIntrons = new RegionVector();
+
+		HashSet<String> wildtypes = getWTs(intron, transcripts, out); // IDs of transcripts with exon skipping
+		HashSet<String> splicedvar = getSVs(intron, transcripts, out); // Ids of transcripts with same spliced Variant
+
+		// System.out.println(wildtypes.size());
+		// System.out.println(splicedvar.size());
+		// System.out.println();
+
+		// if(wildtypes.size() ==0) {
+		// }else {
+		// System.out.println("t");
+		// }
+
+		if (wildtypes.size() > 0) // wenn es exon skipping gibt!!
+		{
+			// System.out.println(wildtypes.size());
+
+			// For every transcript ID with exon skipping
+			for (String id : wildtypes) {
+				RegionVector queryRV = transcripts.get(id); // Transcript values
+				
+//				queryRV.printRegions();
+				
+				queryRV = queryRV.inverse(); // Transcripts Introns
+				
+//				queryRV.printRegions();
+//				System.out.println();
+
+				if(queryRV.id.equals("ENSMUST00000141711")) {
+					System.out.println("stop");
+				}
+				
+				//Intron != a intron of queryRV
+				if (regionInRV(intron, queryRV) == false && queryRV.getSize() > 1) {
+
+					int i = 0;
+
+					// while start of intron != start of intron of transcript continue
+					while (queryRV.regions.get(i).getX1() != intron.getX1() && i < queryRV.regions.size() - 1) {
+						i++;
+					}
+
+					// while end of intron != end of intron of transcript save intron in
+					// skippedIntrons
+					while (queryRV.regions.get(i).getX2() != intron.getX2()) {
+						int start = queryRV.regions.get(i).getX1();
+						int end = queryRV.regions.get(i).getX2();
+						Region skippedIntron = new Region(start, end);
+						skippedIntrons.addRegion(skippedIntron);
+						i++;
+					}
+					int start = queryRV.regions.get(i).getX1();
+					int end = queryRV.regions.get(i).getX2();
+					Region skippedIntron = new Region(start, end);
+					skippedIntrons.addRegion(skippedIntron);
+				}
+			}
+		}
+		return skippedIntrons;
+
+	}
+
+	public void getAll(Gene gene, Region intron, HashMap<String, RegionVector> transcripts, OutputMap outMap) {
+
+		Output out = new Output();
+
+		RegionVector skippedIntrons = getIntrons(intron, transcripts, out);
+		if (skippedIntrons.getSize() == 0) {
+			return;
+		}
+		out.maxSkippedBases = 1;
+		out.minSkippedBases = 1;
+		out.maxSkippedExons = 1;
+		out.minSkippedExons = 1;
+
+		out.setOutput(gene, intron, skippedIntrons);
+
+		outMap.resultMap.put(intron, out);
 	}
 
 	public void getSkippedExonFromGen(Gene gene, OutputMap outMap) {
-		for (RegionVector rv : gene.transcripts.values()) {
-			for (Region r : rv.inverse().regions) {
-				getSkippedExon(r, gene, rv.id, outMap, rv);
+
+		for (RegionVector rv : gene.transcripts.values()) // For every transcript in a gene:
+		{
+			for (Region r : rv.inverse().regions) // For every intron in a transcript:
+			{
+				getAll(gene, r, gene.transcripts, outMap);
 			}
 		}
 	}
+
 }

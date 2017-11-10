@@ -20,26 +20,25 @@ public class CDSReader {
 			reader = new BufferedReader(new FileReader(file));
 
 			String rline = "";
-
+			
 			while ((rline = reader.readLine()) != null) {
 
 				if (rline.indexOf('#') != 0) {
 
 					int firstTab = rline.indexOf('\t');
 					int secondTab = rline.indexOf('\t', firstTab + 1);
-
 					if (rline.substring(secondTab + 1, secondTab + 4).toLowerCase().equals("cds")) {
 						String[] line = rline.split("(\t)|(;)");
 						String chr = line[0];
 						int start = Integer.parseInt(line[3]); // line[3] is always start and should be read as integer
 						int end = Integer.parseInt(line[4]); // line[3] is always end and should be read as integer
-						char strand = line[6].charAt(0);
+						String strand = line[6];
 
 						String transID = transcriptIDSearch(line);
 						String geneID = geneIDSearch(line);
 						String geneName = geneNameSearch(line);
 						String proteinID = proteinIDSearch(line);
-						
+
 						Gene gene = new Gene();
 						gene.setGene(geneID, chr, geneName, strand);
 						Gene newGene = genes.putIfAbsent(geneID, gene);
@@ -49,8 +48,10 @@ public class CDSReader {
 
 						if (newGene == null) // means this gene is new
 						{
+
 							transcript.addRegion(cds);
 							gene.transcripts.put(transID, transcript);
+
 						} else // gene already exists
 						{
 							Gene correspondingGene = genes.get(geneID);
@@ -93,7 +94,7 @@ public class CDSReader {
 		}
 		return targetID;
 	}
-	
+
 	public String proteinIDSearch(String[] line) {
 		String targetID = "";
 		for (int i = 0; i < line.length; i++) {
@@ -119,6 +120,7 @@ public class CDSReader {
 	public String geneIDSearch(String[] line) {
 		String targetID = "";
 		for (int i = 0; i < line.length; i++) {
+			line[i] = line[i].trim();
 			if (line[i].indexOf('g') == 0 && line[i].indexOf('d') == 6) {
 				targetID = line[i].substring(line[i].indexOf('\"') + 1, line[i].length() - 1);
 				break;
